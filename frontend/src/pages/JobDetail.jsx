@@ -2,12 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import API from '../api';
 
+const FONT_FAMILY = "'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif";
+const PRIMARY = '#714DFF';
+const GRADIENT = 'linear-gradient(135deg, #714DFF 0%, #E151FF 100%)';
+
 const JobDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [applyHover, setApplyHover] = useState(false);
+  const [backHover, setBackHover] = useState(false);
 
   useEffect(() => {
     const fetchJob = async () => {
@@ -40,10 +46,20 @@ const JobDetail = () => {
   if (error) {
     return (
       <div style={styles.errorWrap}>
-        <p style={styles.errorText}>{error}</p>
-        <button style={styles.backBtn} onClick={() => navigate('/')}>
-          Back to Careers
-        </button>
+        <div style={styles.errorCard}>
+          <p style={styles.errorText}>{error}</p>
+          <button
+            style={{
+              ...styles.backBtn,
+              ...(backHover ? styles.backBtnHover : {}),
+            }}
+            onMouseEnter={() => setBackHover(true)}
+            onMouseLeave={() => setBackHover(false)}
+            onClick={() => navigate('/')}
+          >
+            Back to Careers
+          </button>
+        </div>
       </div>
     );
   }
@@ -64,8 +80,17 @@ const JobDetail = () => {
 
   return (
     <div style={styles.page}>
-      <button style={styles.backLink} onClick={() => navigate('/')}>
-        &larr; Back to All Positions
+      <button
+        style={{
+          ...styles.backLink,
+          ...(backHover ? { opacity: 0.8 } : {}),
+        }}
+        onMouseEnter={() => setBackHover(true)}
+        onMouseLeave={() => setBackHover(false)}
+        onClick={() => navigate('/')}
+      >
+        <span style={{ marginRight: 6, fontSize: 18, lineHeight: 1 }}>&larr;</span>
+        Back to All Positions
       </button>
 
       <div style={styles.card}>
@@ -77,17 +102,17 @@ const JobDetail = () => {
         <div style={styles.metaRow}>
           {job.team && (
             <span style={styles.metaItem}>
-              <strong>Team:</strong> {job.team}
+              <span style={styles.metaLabel}>Team</span> {job.team}
             </span>
           )}
           {job.location && (
             <span style={styles.metaItem}>
-              <strong>Location:</strong> {job.location}
+              <span style={styles.metaLabel}>Location</span> {job.location}
             </span>
           )}
           {job.experience_level && (
             <span style={styles.metaItem}>
-              <strong>Experience:</strong> {job.experience_level}
+              <span style={styles.metaLabel}>Experience</span> {job.experience_level}
             </span>
           )}
         </div>
@@ -128,29 +153,30 @@ const JobDetail = () => {
         <div style={styles.applySection}>
           {job.status === 'Closed' ? (
             <div style={{ textAlign: 'center' }}>
-              <div style={{ display: 'inline-block', padding: '12px 24px', background: '#fee2e2', borderRadius: 8, border: '1px solid #fecaca', marginBottom: 8 }}>
-                <span style={{ color: '#991b1b', fontWeight: 600, fontSize: 15 }}>
-                  🔴 This position has been closed
-                </span>
+              <div style={styles.closedBadge}>
+                This position has been closed
               </div>
-              <p style={{ color: '#6b7280', fontSize: 13, margin: '8px 0 0' }}>
+              <p style={styles.statusMessage}>
                 This role is no longer accepting applications. Please check our other open positions.
               </p>
             </div>
           ) : job.status === 'Paused' ? (
             <div style={{ textAlign: 'center' }}>
-              <div style={{ display: 'inline-block', padding: '12px 24px', background: '#fef3c7', borderRadius: 8, border: '1px solid #fde68a', marginBottom: 8 }}>
-                <span style={{ color: '#92400e', fontWeight: 600, fontSize: 15 }}>
-                  ⏸️ This position is currently on hold
-                </span>
+              <div style={styles.pausedBadge}>
+                This position is currently on hold
               </div>
-              <p style={{ color: '#6b7280', fontSize: 13, margin: '8px 0 0' }}>
+              <p style={styles.statusMessage}>
                 Hiring for this role has been temporarily paused. Please check back later.
               </p>
             </div>
           ) : (
             <button
-              style={styles.applyBtn}
+              style={{
+                ...styles.applyBtn,
+                ...(applyHover ? styles.applyBtnHover : {}),
+              }}
+              onMouseEnter={() => setApplyHover(true)}
+              onMouseLeave={() => setApplyHover(false)}
               onClick={() => navigate(`/apply/${job.id}`)}
             >
               Apply for this Role
@@ -167,101 +193,153 @@ const styles = {
     maxWidth: 800,
     margin: '0 auto',
     padding: '40px 20px',
-    fontFamily:
-      "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+    fontFamily: FONT_FAMILY,
   },
   backLink: {
-    display: 'inline-block',
+    display: 'inline-flex',
+    alignItems: 'center',
     marginBottom: 24,
     padding: '8px 0',
     fontSize: 14,
-    color: '#4f46e5',
+    color: PRIMARY,
     background: 'none',
     border: 'none',
     cursor: 'pointer',
-    fontWeight: 500,
+    fontWeight: 600,
+    fontFamily: FONT_FAMILY,
+    transition: 'opacity 0.2s ease',
   },
   card: {
     background: '#fff',
     border: '1px solid #e5e7eb',
-    borderRadius: 12,
-    padding: 32,
-    boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
+    borderRadius: '1.75rem',
+    padding: 36,
+    boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
   },
   titleRow: {
     display: 'flex',
     alignItems: 'center',
-    gap: 12,
+    gap: 14,
     flexWrap: 'wrap',
-    marginBottom: 16,
+    marginBottom: 18,
   },
   title: {
     fontSize: 28,
     fontWeight: 700,
     color: '#1a1a2e',
     margin: 0,
+    fontFamily: FONT_FAMILY,
   },
   remoteBadge: {
     fontSize: 12,
     fontWeight: 600,
     color: '#065f46',
     background: '#d1fae5',
-    borderRadius: 6,
-    padding: '4px 12px',
+    borderRadius: 9999,
+    padding: '4px 14px',
+    fontFamily: FONT_FAMILY,
   },
   metaRow: {
     display: 'flex',
     flexWrap: 'wrap',
-    gap: 20,
+    gap: 24,
     marginBottom: 28,
     paddingBottom: 20,
-    borderBottom: '1px solid #f3f4f6',
+    borderBottom: '1px solid #f0f0f4',
   },
   metaItem: {
     fontSize: 14,
+    color: '#6b7280',
+    fontFamily: FONT_FAMILY,
+  },
+  metaLabel: {
+    fontWeight: 600,
     color: '#374151',
+    marginRight: 4,
   },
   section: {
     marginBottom: 28,
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: 600,
+    fontWeight: 700,
     color: '#1a1a2e',
     margin: '0 0 12px',
+    fontFamily: FONT_FAMILY,
   },
   description: {
     fontSize: 15,
-    lineHeight: 1.7,
+    lineHeight: 1.75,
     color: '#4b5563',
     margin: 0,
     whiteSpace: 'pre-wrap',
+    fontFamily: FONT_FAMILY,
   },
   list: {
     margin: 0,
-    paddingLeft: 20,
+    paddingLeft: 0,
+    listStyle: 'none',
   },
   listItem: {
     fontSize: 15,
-    lineHeight: 1.7,
+    lineHeight: 1.75,
     color: '#4b5563',
-    marginBottom: 6,
+    marginBottom: 8,
+    paddingLeft: 20,
+    position: 'relative',
+    fontFamily: FONT_FAMILY,
   },
   applySection: {
-    marginTop: 32,
-    paddingTop: 24,
-    borderTop: '1px solid #f3f4f6',
+    marginTop: 36,
+    paddingTop: 28,
+    borderTop: '1px solid #f0f0f4',
     textAlign: 'center',
   },
   applyBtn: {
-    padding: '14px 48px',
+    padding: '14px 52px',
     fontSize: 16,
     fontWeight: 600,
     color: '#fff',
-    background: '#4f46e5',
+    background: GRADIENT,
     border: 'none',
-    borderRadius: 8,
+    borderRadius: 9999,
     cursor: 'pointer',
+    fontFamily: FONT_FAMILY,
+    transition: 'box-shadow 0.2s ease, transform 0.2s ease',
+  },
+  applyBtnHover: {
+    boxShadow: '0 6px 24px rgba(113, 77, 255, 0.35)',
+    transform: 'translateY(-1px)',
+  },
+  closedBadge: {
+    display: 'inline-block',
+    padding: '10px 28px',
+    background: '#fee2e2',
+    borderRadius: 9999,
+    border: '1px solid #fecaca',
+    color: '#991b1b',
+    fontWeight: 600,
+    fontSize: 14,
+    marginBottom: 10,
+    fontFamily: FONT_FAMILY,
+  },
+  pausedBadge: {
+    display: 'inline-block',
+    padding: '10px 28px',
+    background: '#fef3c7',
+    borderRadius: 9999,
+    border: '1px solid #fde68a',
+    color: '#92400e',
+    fontWeight: 600,
+    fontSize: 14,
+    marginBottom: 10,
+    fontFamily: FONT_FAMILY,
+  },
+  statusMessage: {
+    color: '#6b7280',
+    fontSize: 13,
+    margin: '8px 0 0',
+    fontFamily: FONT_FAMILY,
   },
   loaderWrap: {
     display: 'flex',
@@ -269,12 +347,13 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     minHeight: '60vh',
+    fontFamily: FONT_FAMILY,
   },
   spinner: {
     width: 40,
     height: 40,
     border: '4px solid #e5e7eb',
-    borderTop: '4px solid #4f46e5',
+    borderTop: `4px solid ${PRIMARY}`,
     borderRadius: '50%',
     animation: 'spin 0.8s linear infinite',
   },
@@ -282,6 +361,7 @@ const styles = {
     marginTop: 16,
     color: '#6b7280',
     fontSize: 15,
+    fontFamily: FONT_FAMILY,
   },
   errorWrap: {
     display: 'flex',
@@ -289,26 +369,56 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     minHeight: '60vh',
+    fontFamily: FONT_FAMILY,
+  },
+  errorCard: {
+    background: '#fff',
+    borderRadius: '1.75rem',
+    padding: '40px 36px',
+    boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
+    textAlign: 'center',
+    maxWidth: 480,
   },
   errorText: {
     color: '#dc2626',
     fontSize: 16,
-    marginBottom: 16,
+    marginBottom: 20,
+    fontFamily: FONT_FAMILY,
+    lineHeight: 1.6,
   },
   backBtn: {
-    padding: '10px 24px',
+    padding: '12px 32px',
     fontSize: 14,
     color: '#fff',
-    background: '#4f46e5',
+    background: GRADIENT,
     border: 'none',
-    borderRadius: 8,
+    borderRadius: 9999,
     cursor: 'pointer',
+    fontWeight: 600,
+    fontFamily: FONT_FAMILY,
+    transition: 'box-shadow 0.2s ease',
+  },
+  backBtnHover: {
+    boxShadow: '0 6px 24px rgba(113, 77, 255, 0.35)',
   },
 };
 
+/* Inject keyframes and custom bullet styles */
 if (typeof document !== 'undefined') {
   const styleSheet = document.createElement('style');
-  styleSheet.textContent = `@keyframes spin { to { transform: rotate(360deg); } }`;
+  styleSheet.textContent = `
+    @keyframes spin { to { transform: rotate(360deg); } }
+    ul li[style]::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 10px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #714DFF;
+    }
+  `;
   document.head.appendChild(styleSheet);
 }
 

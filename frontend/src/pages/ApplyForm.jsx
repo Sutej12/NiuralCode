@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import API from '../api';
 
@@ -14,6 +14,7 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const ApplyForm = () => {
   const { jobId } = useParams();
   const navigate = useNavigate();
+  const fileInputRef = useRef(null);
 
   const [jobTitle, setJobTitle] = useState('');
   const [jobStatus, setJobStatus] = useState('Open');
@@ -21,6 +22,8 @@ const ApplyForm = () => {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const [fieldErrors, setFieldErrors] = useState({});
+  const [dragOver, setDragOver] = useState(false);
+  const [focusedField, setFocusedField] = useState(null);
 
   const [form, setForm] = useState({
     full_name: '',
@@ -60,6 +63,27 @@ const ApplyForm = () => {
     if (fieldErrors.resume) {
       setFieldErrors((prev) => ({ ...prev, resume: '' }));
     }
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setDragOver(false);
+    const file = e.dataTransfer.files[0] || null;
+    if (file) {
+      setForm((prev) => ({ ...prev, resume: file }));
+      if (fieldErrors.resume) {
+        setFieldErrors((prev) => ({ ...prev, resume: '' }));
+      }
+    }
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setDragOver(true);
+  };
+
+  const handleDragLeave = () => {
+    setDragOver(false);
   };
 
   const validate = () => {
@@ -168,6 +192,12 @@ const ApplyForm = () => {
     }
   };
 
+  const getInputStyle = (fieldName) => ({
+    ...styles.input,
+    ...(fieldErrors[fieldName] ? styles.inputError : {}),
+    ...(focusedField === fieldName ? styles.inputFocus : {}),
+  });
+
   if (loading) {
     return (
       <div style={styles.loaderWrap}>
@@ -184,27 +214,41 @@ const ApplyForm = () => {
 
         {(jobStatus === 'Closed' || jobStatus === 'Paused') && (
           <div style={{
-            textAlign: 'center', padding: '32px 20px', marginBottom: 20,
+            textAlign: 'center',
+            padding: '36px 24px',
+            marginBottom: 24,
             background: jobStatus === 'Closed' ? '#fef2f2' : '#fffbeb',
-            border: `1px solid ${jobStatus === 'Closed' ? '#fecaca' : '#fde68a'}`,
-            borderRadius: 10,
+            border: `1.5px solid ${jobStatus === 'Closed' ? '#fecaca' : '#fde68a'}`,
+            borderRadius: '1.75rem',
           }}>
-            <div style={{ fontSize: 40, marginBottom: 12 }}>
+            <div style={{ fontSize: 44, marginBottom: 14 }}>
               {jobStatus === 'Closed' ? '🔴' : '⏸️'}
             </div>
-            <h2 style={{ margin: '0 0 8px', fontSize: 18, color: jobStatus === 'Closed' ? '#991b1b' : '#92400e' }}>
+            <h2 style={{
+              margin: '0 0 8px',
+              fontSize: 18,
+              fontWeight: 700,
+              fontFamily: "'Inter Tight', sans-serif",
+              color: jobStatus === 'Closed' ? '#991b1b' : '#92400e',
+            }}>
               {jobStatus === 'Closed'
                 ? 'This position has been closed'
                 : 'This position is currently on hold'}
             </h2>
-            <p style={{ color: '#6b7280', fontSize: 14, margin: '0 0 16px', lineHeight: 1.6 }}>
+            <p style={{
+              color: '#6b7280',
+              fontSize: 14,
+              margin: '0 0 20px',
+              lineHeight: 1.6,
+              fontFamily: "'Inter Tight', sans-serif",
+            }}>
               {jobStatus === 'Closed'
                 ? 'This role is no longer accepting applications. Please browse our other open positions.'
                 : 'Hiring for this role has been temporarily paused. Please check back later.'}
             </p>
             <button
               onClick={() => navigate('/')}
-              style={{ padding: '10px 24px', background: '#4f46e5', color: '#fff', border: 'none', borderRadius: 8, fontWeight: 600, fontSize: 14, cursor: 'pointer' }}
+              style={styles.browseBtn}
             >
               Browse Open Positions
             </button>
@@ -223,10 +267,9 @@ const ApplyForm = () => {
               name="full_name"
               value={form.full_name}
               onChange={handleChange}
-              style={{
-                ...styles.input,
-                ...(fieldErrors.full_name ? styles.inputError : {}),
-              }}
+              onFocus={() => setFocusedField('full_name')}
+              onBlur={() => setFocusedField(null)}
+              style={getInputStyle('full_name')}
               placeholder="John Doe"
             />
             {fieldErrors.full_name && (
@@ -243,10 +286,9 @@ const ApplyForm = () => {
               name="email"
               value={form.email}
               onChange={handleChange}
-              style={{
-                ...styles.input,
-                ...(fieldErrors.email ? styles.inputError : {}),
-              }}
+              onFocus={() => setFocusedField('email')}
+              onBlur={() => setFocusedField(null)}
+              style={getInputStyle('email')}
               placeholder="john@example.com"
             />
             {fieldErrors.email && (
@@ -263,10 +305,9 @@ const ApplyForm = () => {
               name="linkedin_url"
               value={form.linkedin_url}
               onChange={handleChange}
-              style={{
-                ...styles.input,
-                ...(fieldErrors.linkedin_url ? styles.inputError : {}),
-              }}
+              onFocus={() => setFocusedField('linkedin_url')}
+              onBlur={() => setFocusedField(null)}
+              style={getInputStyle('linkedin_url')}
               placeholder="https://linkedin.com/in/yourprofile"
             />
             {fieldErrors.linkedin_url && (
@@ -281,7 +322,12 @@ const ApplyForm = () => {
               name="portfolio_url"
               value={form.portfolio_url}
               onChange={handleChange}
-              style={styles.input}
+              onFocus={() => setFocusedField('portfolio_url')}
+              onBlur={() => setFocusedField(null)}
+              style={{
+                ...styles.input,
+                ...(focusedField === 'portfolio_url' ? styles.inputFocus : {}),
+              }}
               placeholder="https://yourportfolio.com"
             />
           </div>
@@ -293,13 +339,18 @@ const ApplyForm = () => {
               name="referral_code"
               value={form.referral_code}
               onChange={handleChange}
-              style={{
-                ...styles.input,
-                ...(fieldErrors.referral_code ? styles.inputError : {}),
-              }}
+              onFocus={() => setFocusedField('referral_code')}
+              onBlur={() => setFocusedField(null)}
+              style={getInputStyle('referral_code')}
               placeholder="Enter referral code if you have one"
             />
-            <p style={styles.hint}>Have a referral? Enter the code to get priority consideration.</p>
+            <p style={styles.referralHint}>
+              Have a referral? Enter the code to get priority consideration.
+              <br />
+              <span style={{ fontWeight: 600, color: '#714DFF' }}>
+                💡 For demo purposes, use referral code: <span style={{ background: '#ede9fe', padding: '2px 8px', borderRadius: 6, fontFamily: 'monospace', letterSpacing: '0.5px' }}>Sutej1999</span>
+              </span>
+            </p>
             {fieldErrors.referral_code && (
               <p style={styles.fieldError}>{fieldErrors.referral_code}</p>
             )}
@@ -309,16 +360,52 @@ const ApplyForm = () => {
             <label style={styles.label}>
               Resume <span style={styles.required}>*</span>
             </label>
-            <input
-              type="file"
-              accept=".pdf,.docx"
-              onChange={handleFileChange}
+            <div
               style={{
-                ...styles.fileInput,
-                ...(fieldErrors.resume ? styles.inputError : {}),
+                ...styles.fileDropZone,
+                ...(dragOver ? styles.fileDropZoneActive : {}),
+                ...(fieldErrors.resume ? { borderColor: '#dc2626' } : {}),
               }}
-            />
-            <p style={styles.hint}>PDF or DOCX only. Maximum 5MB.</p>
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".pdf,.docx"
+                onChange={handleFileChange}
+                style={{ display: 'none' }}
+              />
+              <div style={styles.fileDropIcon}>
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#714DFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                  <polyline points="17 8 12 3 7 8" />
+                  <line x1="12" y1="3" x2="12" y2="15" />
+                </svg>
+              </div>
+              {form.resume ? (
+                <p style={styles.fileDropText}>
+                  <span style={{ fontWeight: 600, color: '#714DFF' }}>{form.resume.name}</span>
+                  <br />
+                  <span style={{ fontSize: 12, color: '#9ca3af' }}>
+                    {(form.resume.size / 1024 / 1024).toFixed(2)} MB
+                  </span>
+                </p>
+              ) : (
+                <p style={styles.fileDropText}>
+                  <span style={{ fontWeight: 600, color: '#1a1a2e' }}>
+                    Drag & drop your resume here
+                  </span>
+                  <br />
+                  <span style={{ fontSize: 13, color: '#9ca3af' }}>
+                    or <span style={{ color: '#714DFF', fontWeight: 500 }}>browse files</span>
+                  </span>
+                </p>
+              )}
+              <p style={styles.fileDropHint}>PDF or DOCX only. Maximum 5MB.</p>
+            </div>
             {fieldErrors.resume && (
               <p style={styles.fieldError}>{fieldErrors.resume}</p>
             )}
@@ -351,94 +438,149 @@ const styles = {
   page: {
     maxWidth: 600,
     margin: '0 auto',
-    padding: '40px 20px',
-    fontFamily:
-      "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+    padding: '48px 20px',
+    fontFamily: "'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
   },
   card: {
     background: '#fff',
-    border: '1px solid #e5e7eb',
-    borderRadius: 12,
-    padding: 32,
-    boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
+    border: '1px solid #e8e8e8',
+    borderRadius: '1.75rem',
+    padding: '40px 36px',
+    boxShadow: '0 4px 24px rgba(113, 77, 255, 0.06)',
   },
   heading: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 700,
     color: '#1a1a2e',
     margin: '0 0 4px',
+    fontFamily: "'Inter Tight', sans-serif",
   },
   jobTitle: {
     fontSize: 16,
-    color: '#4f46e5',
-    fontWeight: 500,
-    margin: '0 0 28px',
+    color: '#714DFF',
+    fontWeight: 600,
+    margin: '0 0 32px',
+    fontFamily: "'Inter Tight', sans-serif",
   },
   errorBanner: {
-    padding: '12px 16px',
-    marginBottom: 20,
+    padding: '14px 18px',
+    marginBottom: 22,
     background: '#fef2f2',
     color: '#dc2626',
-    borderRadius: 8,
+    borderRadius: 12,
     fontSize: 14,
-    border: '1px solid #fecaca',
+    border: '1.5px solid #fecaca',
+    fontFamily: "'Inter Tight', sans-serif",
   },
   field: {
-    marginBottom: 20,
+    marginBottom: 22,
   },
   label: {
     display: 'block',
     fontSize: 14,
-    fontWeight: 500,
+    fontWeight: 600,
     color: '#374151',
-    marginBottom: 6,
+    marginBottom: 7,
+    fontFamily: "'Inter Tight', sans-serif",
   },
   required: {
     color: '#dc2626',
   },
   input: {
     width: '100%',
-    padding: '10px 14px',
+    padding: '12px 16px',
     fontSize: 14,
-    border: '1px solid #d1d5db',
-    borderRadius: 8,
+    border: '1.5px solid #e8e8e8',
+    borderRadius: 12,
     outline: 'none',
     boxSizing: 'border-box',
+    fontFamily: "'Inter Tight', sans-serif",
+    transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
+    background: '#fff',
+  },
+  inputFocus: {
+    borderColor: '#714DFF',
+    boxShadow: '0 0 0 3px rgba(113, 77, 255, 0.12)',
   },
   inputError: {
     borderColor: '#dc2626',
   },
-  fileInput: {
-    width: '100%',
-    padding: '10px 0',
-    fontSize: 14,
-    boxSizing: 'border-box',
-  },
   hint: {
     fontSize: 12,
     color: '#9ca3af',
-    margin: '4px 0 0',
+    margin: '5px 0 0',
+    fontFamily: "'Inter Tight', sans-serif",
+  },
+  referralHint: {
+    fontSize: 12,
+    color: '#714DFF',
+    margin: '5px 0 0',
+    fontFamily: "'Inter Tight', sans-serif",
+    opacity: 0.75,
   },
   fieldError: {
     fontSize: 13,
     color: '#dc2626',
-    margin: '4px 0 0',
+    margin: '5px 0 0',
+    fontFamily: "'Inter Tight', sans-serif",
+  },
+  fileDropZone: {
+    border: '2px dashed #d1d5db',
+    borderRadius: 16,
+    padding: '28px 20px',
+    textAlign: 'center',
+    cursor: 'pointer',
+    transition: 'border-color 0.2s ease, background 0.2s ease',
+    background: '#fafafa',
+  },
+  fileDropZoneActive: {
+    borderColor: '#714DFF',
+    background: 'rgba(113, 77, 255, 0.04)',
+  },
+  fileDropIcon: {
+    marginBottom: 10,
+  },
+  fileDropText: {
+    margin: '0 0 6px',
+    fontSize: 14,
+    lineHeight: 1.6,
+    fontFamily: "'Inter Tight', sans-serif",
+  },
+  fileDropHint: {
+    fontSize: 12,
+    color: '#9ca3af',
+    margin: 0,
+    fontFamily: "'Inter Tight', sans-serif",
   },
   submitBtn: {
     width: '100%',
-    padding: '14px 0',
+    padding: '15px 0',
     fontSize: 16,
     fontWeight: 600,
     color: '#fff',
-    background: '#4f46e5',
+    background: 'linear-gradient(135deg, #714DFF 0%, #E151FF 100%)',
     border: 'none',
-    borderRadius: 8,
+    borderRadius: 9999,
     cursor: 'pointer',
-    marginTop: 8,
+    marginTop: 10,
+    fontFamily: "'Inter Tight', sans-serif",
+    transition: 'opacity 0.2s ease, transform 0.15s ease',
   },
   submitBtnDisabled: {
     opacity: 0.7,
     cursor: 'not-allowed',
+  },
+  browseBtn: {
+    padding: '12px 28px',
+    background: 'linear-gradient(135deg, #714DFF 0%, #E151FF 100%)',
+    color: '#fff',
+    border: 'none',
+    borderRadius: 9999,
+    fontWeight: 600,
+    fontSize: 14,
+    cursor: 'pointer',
+    fontFamily: "'Inter Tight', sans-serif",
+    transition: 'opacity 0.2s ease',
   },
   btnInner: {
     display: 'inline-flex',
@@ -463,8 +605,8 @@ const styles = {
   spinner: {
     width: 40,
     height: 40,
-    border: '4px solid #e5e7eb',
-    borderTop: '4px solid #4f46e5',
+    border: '4px solid #e8e8e8',
+    borderTop: '4px solid #714DFF',
     borderRadius: '50%',
     animation: 'spin 0.8s linear infinite',
   },

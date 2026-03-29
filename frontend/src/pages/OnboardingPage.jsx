@@ -158,7 +158,7 @@ const OnboardingPage = () => {
                 <div
                   style={{
                     ...styles.stepCircle,
-                    background: isCompleted ? '#059669' : isActive ? '#4f46e5' : '#d1d5db',
+                    background: isCompleted ? '#059669' : isActive ? '#714DFF' : '#d1d5db',
                     color: isCompleted || isActive ? '#fff' : '#9ca3af',
                   }}
                 >
@@ -213,15 +213,16 @@ const OnboardingPage = () => {
             onClick={handleCheckSlackJoin}
             disabled={checking}
           >
-            {checking ? 'Checking...' : '🔍 Check if Joined Slack'}
+            {checking ? 'Checking...' : 'Check if Joined Slack'}
           </button>
         )}
         {onboarding?.slack_joined && (
           <div style={{
             padding: '12px 24px', background: '#d1fae5', color: '#065f46',
-            borderRadius: 8, fontWeight: 600, fontSize: 14,
+            borderRadius: 9999, fontWeight: 600, fontSize: 14,
+            fontFamily: "'Inter Tight', sans-serif",
           }}>
-            ✅ Onboarding Complete
+            Onboarding Complete
           </div>
         )}
       </div>
@@ -242,8 +243,7 @@ const styles = {
     maxWidth: 700,
     margin: '0 auto',
     padding: '40px 20px',
-    fontFamily:
-      "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+    fontFamily: "'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
   },
   headerRow: {
     display: 'flex',
@@ -261,11 +261,13 @@ const styles = {
     padding: '8px 18px',
     fontSize: 13,
     fontWeight: 500,
-    color: '#4f46e5',
+    color: '#714DFF',
     background: '#eef2ff',
-    border: '1px solid #c7d2fe',
-    borderRadius: 8,
+    border: '1px solid #e8e8e8',
+    borderRadius: 9999,
     cursor: 'pointer',
+    fontFamily: "'Inter Tight', sans-serif",
+    transition: 'all 0.3s ease',
   },
   progressSection: {
     marginBottom: 32,
@@ -291,6 +293,9 @@ const styles = {
   },
   stepsContainer: {
     marginBottom: 32,
+    border: '1px solid #e8e8e8',
+    borderRadius: '1.75rem',
+    padding: '24px',
   },
   stepRow: {
     display: 'flex',
@@ -313,11 +318,13 @@ const styles = {
     fontSize: 14,
     fontWeight: 600,
     flexShrink: 0,
+    transition: 'all 0.3s ease',
   },
   stepLine: {
     width: 2,
     flex: 1,
     minHeight: 24,
+    transition: 'all 0.3s ease',
   },
   stepContent: {
     paddingTop: 4,
@@ -326,6 +333,7 @@ const styles = {
   stepLabel: {
     fontSize: 15,
     margin: '0 0 2px',
+    transition: 'all 0.3s ease',
   },
   stepTimestamp: {
     fontSize: 12,
@@ -340,20 +348,24 @@ const styles = {
     fontSize: 14,
     fontWeight: 500,
     color: '#fff',
-    background: '#4f46e5',
+    background: '#714DFF',
     border: 'none',
-    borderRadius: 8,
+    borderRadius: 9999,
     cursor: 'pointer',
+    fontFamily: "'Inter Tight', sans-serif",
+    transition: 'all 0.3s ease',
   },
   btnSecondary: {
     padding: '12px 28px',
     fontSize: 14,
     fontWeight: 500,
-    color: '#4f46e5',
+    color: '#714DFF',
     background: '#eef2ff',
-    border: '1px solid #c7d2fe',
-    borderRadius: 8,
+    border: '1px solid #e8e8e8',
+    borderRadius: 9999,
     cursor: 'pointer',
+    fontFamily: "'Inter Tight', sans-serif",
+    transition: 'all 0.3s ease',
   },
   pollNote: {
     fontSize: 12,
@@ -364,7 +376,7 @@ const styles = {
     background: '#fef2f2',
     color: '#dc2626',
     border: '1px solid #fecaca',
-    borderRadius: 8,
+    borderRadius: '1.75rem',
     padding: '10px 16px',
     marginBottom: 16,
     fontSize: 14,
@@ -373,7 +385,7 @@ const styles = {
     background: '#f0fdf4',
     color: '#166534',
     border: '1px solid #bbf7d0',
-    borderRadius: 8,
+    borderRadius: '1.75rem',
     padding: '10px 16px',
     marginBottom: 16,
     fontSize: 14,
@@ -389,7 +401,7 @@ const styles = {
     width: 40,
     height: 40,
     border: '4px solid #e5e7eb',
-    borderTop: '4px solid #4f46e5',
+    borderTop: '4px solid #714DFF',
     borderRadius: '50%',
     animation: 'spin 0.8s linear infinite',
   },

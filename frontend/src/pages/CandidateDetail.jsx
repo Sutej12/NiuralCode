@@ -14,7 +14,7 @@ const STATUS_OPTIONS = [
 ];
 
 const STATUS_COLORS = {
-  Applied: { bg: '#e0e7ff', color: '#3730a3' },
+  Applied: { bg: '#ede9fe', color: '#714DFF' },
   Screened: { bg: '#dbeafe', color: '#1e40af' },
   Shortlisted: { bg: '#fef9c3', color: '#854d0e' },
   'In Interview': { bg: '#fce7f3', color: '#9d174d' },
@@ -169,6 +169,7 @@ export default function CandidateDetail() {
                 display: 'inline-block', padding: '6px 14px', borderRadius: '9999px',
                 fontSize: '13px', fontWeight: 600,
                 background: statusColor.bg, color: statusColor.color,
+                transition: 'all 0.3s ease',
               }}>
                 {c.status}
               </span>
@@ -233,7 +234,8 @@ export default function CandidateDetail() {
                     {parsed.skills.map((skill, i) => (
                       <span key={i} style={{
                         padding: '4px 10px', borderRadius: '9999px', fontSize: '12px',
-                        background: '#e0e7ff', color: '#3730a3', fontWeight: 500,
+                        background: '#ede9fe', color: '#714DFF', fontWeight: 500,
+                        transition: 'all 0.3s ease',
                       }}>
                         {skill}
                       </span>
@@ -284,7 +286,7 @@ export default function CandidateDetail() {
               {research?.concerns && research.concerns.length > 0 && (
                 <div style={{ marginBottom: '16px' }}>
                   <Label>Concerns</Label>
-                  <div style={{ padding: '12px', background: '#fef2f2', borderRadius: '6px' }}>
+                  <div style={{ padding: '12px', background: '#fef2f2', borderRadius: '12px' }}>
                     <ul style={{ margin: 0, paddingLeft: '20px' }}>
                       {research.concerns.map((item, i) => (
                         <li key={i} style={{ fontSize: '14px', color: '#991b1b', lineHeight: 1.6, marginBottom: '4px' }}>{item}</li>
@@ -314,7 +316,7 @@ export default function CandidateDetail() {
                   <Label>Candidate Brief</Label>
                   <div style={{
                     fontSize: '14px', color: '#374151', lineHeight: 1.6,
-                    padding: '12px', background: '#f0fdf4', borderRadius: '6px', borderLeft: '3px solid #16a34a',
+                    padding: '12px', background: '#f0fdf4', borderRadius: '12px', borderLeft: '3px solid #714DFF',
                   }}>
                     {c.candidate_brief}
                   </div>
@@ -378,7 +380,7 @@ export default function CandidateDetail() {
               <div style={{
                 padding: '12px',
                 background: c.status === 'Rejected' ? '#fef2f2' : '#f0fdf4',
-                borderRadius: '6px',
+                borderRadius: '12px',
                 color: c.status === 'Rejected' ? '#991b1b' : '#065f46',
                 fontSize: '13px', fontWeight: 500, textAlign: 'center',
                 border: `1px solid ${c.status === 'Rejected' ? '#fecaca' : '#bbf7d0'}`,
@@ -390,7 +392,7 @@ export default function CandidateDetail() {
                 {statusError && (
                   <div style={{
                     padding: '8px 12px', background: '#fef2f2', color: '#dc2626',
-                    borderRadius: '6px', fontSize: '13px', marginBottom: '8px',
+                    borderRadius: '12px', fontSize: '13px', marginBottom: '8px',
                     border: '1px solid #fecaca',
                   }}>
                     {statusError}
@@ -399,7 +401,7 @@ export default function CandidateDetail() {
                 {statusSuccess && (
                   <div style={{
                     padding: '8px 12px', background: '#f0fdf4', color: '#166534',
-                    borderRadius: '6px', fontSize: '13px', marginBottom: '8px',
+                    borderRadius: '12px', fontSize: '13px', marginBottom: '8px',
                     border: '1px solid #bbf7d0',
                   }}>
                     {statusSuccess}
@@ -417,7 +419,7 @@ export default function CandidateDetail() {
                 {statusOverride === 'Rejected' && (
                   <div style={{
                     padding: '8px 12px', background: '#fef2f2', color: '#991b1b',
-                    borderRadius: '6px', fontSize: '12px', marginTop: '8px',
+                    borderRadius: '12px', fontSize: '12px', marginTop: '8px',
                     border: '1px solid #fecaca',
                   }}>
                     A professional rejection email will be sent to the candidate.
@@ -436,7 +438,7 @@ export default function CandidateDetail() {
                   style={{
                     ...primaryBtnStyle, marginTop: '8px',
                     opacity: (statusUpdating || statusOverride === c.status) ? 0.6 : 1,
-                    background: statusOverride === 'Rejected' ? '#dc2626' : '#4f46e5',
+                    background: statusOverride === 'Rejected' ? '#dc2626' : '#714DFF',
                   }}
                 >
                   {statusUpdating ? 'Updating...' : statusOverride === 'Rejected' ? 'Reject Candidate' : 'Update Status'}
@@ -451,7 +453,7 @@ export default function CandidateDetail() {
               <button
                 onClick={handleScreen}
                 disabled={actionLoading.screen}
-                style={{ ...actionBtnFull('#4f46e5'), opacity: actionLoading.screen ? 0.6 : 1 }}
+                style={{ ...actionBtnFull('#714DFF'), opacity: actionLoading.screen ? 0.6 : 1 }}
               >
                 {actionLoading.screen ? 'Screening...' : 'Screen Candidate'}
               </button>
@@ -464,12 +466,12 @@ export default function CandidateDetail() {
                 {actionLoading.research ? 'Researching...' : 'Research Candidate'}
               </button>
 
-              {c.status === 'Shortlisted' && (
+              {(c.status === 'Shortlisted' || c.status === 'In Interview') && (
                 <button
                   onClick={() => navigate(`/admin/scheduling/${c.id}`)}
                   style={actionBtnFull('#7c3aed')}
                 >
-                  Schedule Interview
+                  📅 Schedule Interview
                 </button>
               )}
 
@@ -478,7 +480,16 @@ export default function CandidateDetail() {
                   onClick={() => navigate(`/admin/interviews/${c.id}`)}
                   style={actionBtnFull('#db2777')}
                 >
-                  View Interview
+                  🎙️ Interview Room
+                </button>
+              )}
+
+              {['Offer', 'Hired', 'Onboarded'].includes(c.status) && (
+                <button
+                  onClick={() => navigate(`/admin/interviews/${c.id}`)}
+                  style={actionBtnFull('#db2777')}
+                >
+                  📝 Interview Transcripts
                 </button>
               )}
 
@@ -487,7 +498,16 @@ export default function CandidateDetail() {
                   onClick={() => navigate(`/admin/offers/${c.id}`)}
                   style={actionBtnFull('#059669')}
                 >
-                  Generate Offer
+                  📄 Generate Offer
+                </button>
+              )}
+
+              {c.status === 'Onboarded' && (
+                <button
+                  onClick={() => navigate(`/admin/onboarding/${c.id}`)}
+                  style={actionBtnFull('#d97706')}
+                >
+                  🚀 Trigger Onboarding
                 </button>
               )}
 
@@ -496,7 +516,7 @@ export default function CandidateDetail() {
                   onClick={() => navigate(`/admin/onboarding/${c.id}`)}
                   style={actionBtnFull('#d97706')}
                 >
-                  Onboarding
+                  📋 Onboarding
                 </button>
               )}
             </div>
@@ -512,8 +532,8 @@ export default function CandidateDetail() {
 function Section({ title, children }) {
   return (
     <div style={{
-      background: '#fff', borderRadius: '8px', border: '1px solid #e5e7eb',
-      padding: '20px',
+      background: '#fff', borderRadius: '1.75rem', border: '1px solid #e5e7eb',
+      padding: '20px', transition: 'all 0.3s ease',
     }}>
       {title && (
         <h2 style={{
@@ -540,7 +560,7 @@ function PreText({ children }) {
   return (
     <pre style={{
       fontSize: '13px', color: '#374151', lineHeight: 1.5,
-      background: '#f9fafb', padding: '12px', borderRadius: '6px',
+      background: '#f9fafb', padding: '12px', borderRadius: '12px',
       whiteSpace: 'pre-wrap', wordBreak: 'break-word', margin: 0,
     }}>
       {children}
@@ -551,29 +571,32 @@ function PreText({ children }) {
 /* Styles */
 
 const linkBtnStyle = {
-  background: 'none', border: 'none', color: '#4f46e5',
+  background: 'none', border: 'none', color: '#714DFF',
   cursor: 'pointer', fontSize: '14px', padding: 0, fontWeight: 500,
+  transition: 'all 0.3s ease',
 };
 
 const extLinkStyle = {
-  color: '#4f46e5', textDecoration: 'none', fontWeight: 500, fontSize: '14px',
+  color: '#714DFF', textDecoration: 'none', fontWeight: 500, fontSize: '14px',
+  transition: 'all 0.3s ease',
 };
 
 const inputStyle = {
-  width: '100%', padding: '8px 12px', borderRadius: '6px',
+  width: '100%', padding: '8px 12px', borderRadius: '12px',
   border: '1px solid #d1d5db', fontSize: '14px', boxSizing: 'border-box',
+  transition: 'all 0.3s ease',
 };
 
 const primaryBtnStyle = {
-  width: '100%', padding: '10px', borderRadius: '6px', border: 'none',
-  background: '#4f46e5', color: '#fff', fontSize: '14px', fontWeight: 600,
-  cursor: 'pointer',
+  width: '100%', padding: '10px', borderRadius: '9999px', border: 'none',
+  background: '#714DFF', color: '#fff', fontSize: '14px', fontWeight: 600,
+  cursor: 'pointer', transition: 'all 0.3s ease',
 };
 
 function actionBtnFull(color) {
   return {
-    width: '100%', padding: '10px', borderRadius: '6px', border: 'none',
+    width: '100%', padding: '10px', borderRadius: '9999px', border: 'none',
     background: color, color: '#fff', fontSize: '14px', fontWeight: 600,
-    cursor: 'pointer', textAlign: 'center',
+    cursor: 'pointer', textAlign: 'center', transition: 'all 0.3s ease',
   };
 }

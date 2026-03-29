@@ -104,6 +104,27 @@ const CandidateScheduleSelect = () => {
     });
   };
 
+  // Inject keyframes for spinner animation
+  useEffect(() => {
+    const styleId = 'niural-schedule-keyframes';
+    if (!document.getElementById(styleId)) {
+      const styleEl = document.createElement('style');
+      styleEl.id = styleId;
+      styleEl.textContent = `
+        @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&display=swap');
+        @keyframes niuralSpin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        @keyframes niuralFadeIn {
+          from { opacity: 0; transform: translateY(12px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `;
+      document.head.appendChild(styleEl);
+    }
+  }, []);
+
   if (loading) {
     return (
       <div style={styles.centerWrap}>
@@ -118,7 +139,11 @@ const CandidateScheduleSelect = () => {
     return (
       <div style={styles.centerWrap}>
         <div style={styles.successCard}>
-          <div style={styles.checkIcon}>✓</div>
+          <div style={styles.checkIcon}>
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+          </div>
           <h2 style={styles.successTitle}>Interview Confirmed!</h2>
           {confirmedSlot && (
             <div style={styles.confirmedDetails}>
@@ -147,8 +172,10 @@ const CandidateScheduleSelect = () => {
     return (
       <div style={styles.centerWrap}>
         <div style={styles.successCard}>
-          <div style={{ ...styles.checkIcon, color: '#2563eb' }}>📩</div>
-          <h2 style={{ ...styles.successTitle, color: '#1e40af' }}>Request Submitted!</h2>
+          <div style={{ ...styles.checkIcon, background: 'linear-gradient(135deg, #714DFF 0%, #E151FF 100%)' }}>
+            <span style={{ fontSize: 28, lineHeight: 1 }}>&#9993;</span>
+          </div>
+          <h2 style={styles.successTitle}>Request Submitted!</h2>
           <p style={styles.successText}>
             We've received your request for a different interview time.
             The interviewer will review your preferences and you'll receive
@@ -184,7 +211,23 @@ const CandidateScheduleSelect = () => {
                 key={slot.id}
                 style={{
                   ...styles.slotCard,
-                  ...(selecting === slot.id ? { borderColor: '#4f46e5', boxShadow: '0 0 0 2px rgba(79,70,229,0.2)' } : {}),
+                  ...(selecting === slot.id
+                    ? { borderColor: '#714DFF', boxShadow: '0 8px 24px rgba(113,77,255,0.18)' }
+                    : {}),
+                }}
+                onMouseEnter={(e) => {
+                  if (selecting !== slot.id) {
+                    e.currentTarget.style.borderColor = '#714DFF';
+                    e.currentTarget.style.boxShadow = '0 8px 24px rgba(113,77,255,0.12)';
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (selecting !== slot.id) {
+                    e.currentTarget.style.borderColor = '#e8e8e8';
+                    e.currentTarget.style.boxShadow = 'none';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                  }
                 }}
               >
                 <div style={styles.slotDate}>{formatDate(slot.start_time)}</div>
@@ -199,6 +242,16 @@ const CandidateScheduleSelect = () => {
                   }}
                   onClick={() => handleSelect(slot.id)}
                   disabled={selecting !== null}
+                  onMouseEnter={(e) => {
+                    if (selecting === null) {
+                      e.currentTarget.style.transform = 'scale(1.03)';
+                      e.currentTarget.style.boxShadow = '0 4px 16px rgba(113,77,255,0.3)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'scale(1)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
                 >
                   {selecting === slot.id ? 'Confirming...' : 'Select This Time'}
                 </button>
@@ -208,7 +261,9 @@ const CandidateScheduleSelect = () => {
 
           {/* Request Different Time Section */}
           <div style={styles.divider}>
+            <div style={styles.dividerLine} />
             <span style={styles.dividerText}>None of these work?</span>
+            <div style={styles.dividerLine} />
           </div>
 
           {!showRequestForm ? (
@@ -216,6 +271,16 @@ const CandidateScheduleSelect = () => {
               <button
                 style={styles.requestBtn}
                 onClick={() => setShowRequestForm(true)}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#714DFF';
+                  e.currentTarget.style.color = '#fff';
+                  e.currentTarget.style.borderColor = '#714DFF';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'transparent';
+                  e.currentTarget.style.color = '#714DFF';
+                  e.currentTarget.style.borderColor = '#714DFF';
+                }}
               >
                 Request a Different Time
               </button>
@@ -236,6 +301,14 @@ const CandidateScheduleSelect = () => {
                     onChange={(e) => setPreferredDate(e.target.value)}
                     style={styles.formInput}
                     min={new Date().toISOString().split('T')[0]}
+                    onFocus={(e) => {
+                      e.currentTarget.style.borderColor = '#714DFF';
+                      e.currentTarget.style.boxShadow = '0 0 0 3px rgba(113,77,255,0.1)';
+                    }}
+                    onBlur={(e) => {
+                      e.currentTarget.style.borderColor = '#e8e8e8';
+                      e.currentTarget.style.boxShadow = 'none';
+                    }}
                   />
                 </div>
                 <div style={styles.formGroup}>
@@ -245,6 +318,14 @@ const CandidateScheduleSelect = () => {
                     value={preferredTime}
                     onChange={(e) => setPreferredTime(e.target.value)}
                     style={styles.formInput}
+                    onFocus={(e) => {
+                      e.currentTarget.style.borderColor = '#714DFF';
+                      e.currentTarget.style.boxShadow = '0 0 0 3px rgba(113,77,255,0.1)';
+                    }}
+                    onBlur={(e) => {
+                      e.currentTarget.style.borderColor = '#e8e8e8';
+                      e.currentTarget.style.boxShadow = 'none';
+                    }}
                   />
                 </div>
               </div>
@@ -257,20 +338,42 @@ const CandidateScheduleSelect = () => {
                   placeholder="E.g., I'm available Monday–Wednesday afternoons, or after 3 PM on weekdays..."
                   rows={3}
                   style={{ ...styles.formInput, resize: 'vertical' }}
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = '#714DFF';
+                    e.currentTarget.style.boxShadow = '0 0 0 3px rgba(113,77,255,0.1)';
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = '#e8e8e8';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
                 />
               </div>
 
-              <div style={{ display: 'flex', gap: '12px', marginTop: '16px' }}>
+              <div style={{ display: 'flex', gap: '12px', marginTop: '20px' }}>
                 <button
                   style={styles.submitRequestBtn}
                   onClick={handleRequestDifferentTime}
                   disabled={requestSubmitting}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'scale(1.03)';
+                    e.currentTarget.style.boxShadow = '0 4px 16px rgba(113,77,255,0.3)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'scale(1)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
                 >
                   {requestSubmitting ? 'Submitting...' : 'Submit Request'}
                 </button>
                 <button
                   style={styles.cancelBtn}
                   onClick={() => setShowRequestForm(false)}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = '#f5f5f5';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'transparent';
+                  }}
                 >
                   Cancel
                 </button>
@@ -287,12 +390,21 @@ const styles = {
   page: {
     maxWidth: 720,
     margin: '0 auto',
-    padding: '40px 20px',
-    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+    padding: '48px 20px',
+    fontFamily: "'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
   },
-  header: { textAlign: 'center', marginBottom: 32 },
-  heading: { fontSize: 28, fontWeight: 700, color: '#1a1a2e', margin: '0 0 8px' },
-  greeting: { fontSize: 15, color: '#6b7280', margin: 0 },
+  header: { textAlign: 'center', marginBottom: 36 },
+  heading: {
+    fontSize: 32,
+    fontWeight: 800,
+    background: 'linear-gradient(135deg, #714DFF 0%, #E151FF 100%)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    backgroundClip: 'text',
+    margin: '0 0 10px',
+    letterSpacing: '-0.02em',
+  },
+  greeting: { fontSize: 15, color: '#6b7280', margin: 0, lineHeight: 1.6 },
 
   slotGrid: {
     display: 'grid',
@@ -301,92 +413,131 @@ const styles = {
   },
   slotCard: {
     background: '#fff',
-    border: '2px solid #e5e7eb',
-    borderRadius: 12,
-    padding: 24,
+    border: '1.5px solid #e8e8e8',
+    borderRadius: '1.75rem',
+    padding: 28,
     textAlign: 'center',
-    transition: 'all 0.2s',
+    transition: 'all 0.25s ease',
     cursor: 'default',
   },
-  slotDate: { fontSize: 15, fontWeight: 600, color: '#374151', marginBottom: 4 },
-  slotTime: { fontSize: 22, fontWeight: 700, color: '#4f46e5', marginBottom: 4 },
-  slotDuration: { fontSize: 13, color: '#9ca3af', marginBottom: 16 },
+  slotDate: {
+    fontSize: 15,
+    fontWeight: 600,
+    color: '#374151',
+    marginBottom: 6,
+    letterSpacing: '-0.01em',
+  },
+  slotTime: {
+    fontSize: 22,
+    fontWeight: 700,
+    color: '#714DFF',
+    marginBottom: 6,
+    letterSpacing: '-0.01em',
+  },
+  slotDuration: { fontSize: 13, color: '#9ca3af', marginBottom: 20 },
   selectBtn: {
     width: '100%',
-    padding: '12px 0',
+    padding: '13px 0',
     fontSize: 14,
     fontWeight: 600,
     color: '#fff',
-    background: '#4f46e5',
+    background: 'linear-gradient(135deg, #714DFF 0%, #E151FF 100%)',
     border: 'none',
-    borderRadius: 8,
+    borderRadius: 9999,
     cursor: 'pointer',
+    transition: 'all 0.2s ease',
+    letterSpacing: '-0.01em',
   },
 
   // Divider
   divider: {
     display: 'flex',
     alignItems: 'center',
-    margin: '32px 0',
+    margin: '36px 0',
     gap: 16,
   },
-  dividerText: {
+  dividerLine: {
     flex: 1,
-    textAlign: 'center',
+    height: 1,
+    background: '#e8e8e8',
+  },
+  dividerText: {
     color: '#9ca3af',
     fontSize: 14,
-    position: 'relative',
+    fontWeight: 500,
+    whiteSpace: 'nowrap',
   },
 
   // Request different time
   requestBtn: {
-    padding: '10px 24px',
+    padding: '12px 28px',
     fontSize: 14,
-    fontWeight: 500,
-    color: '#4f46e5',
-    background: '#eef2ff',
-    border: '1px solid #c7d2fe',
-    borderRadius: 8,
+    fontWeight: 600,
+    color: '#714DFF',
+    background: 'transparent',
+    border: '1.5px solid #714DFF',
+    borderRadius: 9999,
     cursor: 'pointer',
+    transition: 'all 0.2s ease',
+    letterSpacing: '-0.01em',
   },
   requestForm: {
-    background: '#f9fafb',
-    border: '1px solid #e5e7eb',
-    borderRadius: 12,
-    padding: 24,
+    background: '#fff',
+    border: '1.5px solid #e8e8e8',
+    borderRadius: '1.75rem',
+    padding: 32,
   },
-  requestTitle: { fontSize: 18, fontWeight: 600, color: '#1a1a2e', margin: '0 0 4px' },
-  requestSubtext: { fontSize: 14, color: '#6b7280', margin: '0 0 20px' },
+  requestTitle: {
+    fontSize: 18,
+    fontWeight: 700,
+    color: '#1a1a2e',
+    margin: '0 0 4px',
+    letterSpacing: '-0.02em',
+  },
+  requestSubtext: { fontSize: 14, color: '#6b7280', margin: '0 0 24px' },
   formRow: { display: 'flex', gap: 16, marginBottom: 16 },
   formGroup: { flex: 1 },
-  formLabel: { display: 'block', fontSize: 13, fontWeight: 600, color: '#374151', marginBottom: 6 },
+  formLabel: {
+    display: 'block',
+    fontSize: 13,
+    fontWeight: 600,
+    color: '#374151',
+    marginBottom: 8,
+    letterSpacing: '-0.01em',
+  },
   formInput: {
     width: '100%',
-    padding: '10px 12px',
+    padding: '11px 14px',
     fontSize: 14,
-    border: '1px solid #d1d5db',
-    borderRadius: 8,
+    border: '1.5px solid #e8e8e8',
+    borderRadius: 12,
     boxSizing: 'border-box',
+    transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
+    outline: 'none',
+    fontFamily: "'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
   },
   submitRequestBtn: {
-    padding: '10px 24px',
+    padding: '12px 28px',
     fontSize: 14,
     fontWeight: 600,
     color: '#fff',
-    background: '#4f46e5',
+    background: 'linear-gradient(135deg, #714DFF 0%, #E151FF 100%)',
     border: 'none',
-    borderRadius: 8,
+    borderRadius: 9999,
     cursor: 'pointer',
+    transition: 'all 0.2s ease',
+    letterSpacing: '-0.01em',
   },
   cancelBtn: {
-    padding: '10px 24px',
+    padding: '12px 28px',
     fontSize: 14,
     fontWeight: 500,
     color: '#6b7280',
-    background: '#fff',
-    border: '1px solid #d1d5db',
-    borderRadius: 8,
+    background: 'transparent',
+    border: '1.5px solid #e8e8e8',
+    borderRadius: 9999,
     cursor: 'pointer',
+    transition: 'all 0.2s ease',
   },
 
   // Success
@@ -396,30 +547,52 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     minHeight: '60vh',
-    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+    fontFamily: "'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
   },
   successCard: {
     textAlign: 'center',
-    background: '#f0fdf4',
-    border: '1px solid #bbf7d0',
-    borderRadius: 16,
-    padding: '40px 48px',
-    maxWidth: 480,
-  },
-  checkIcon: { fontSize: 48, color: '#059669', marginBottom: 12 },
-  successTitle: { fontSize: 24, fontWeight: 700, color: '#065f46', margin: '0 0 16px' },
-  successText: { fontSize: 15, color: '#374151', margin: 0, lineHeight: 1.6 },
-  confirmedDetails: {
     background: '#fff',
-    borderRadius: 8,
-    padding: 16,
-    margin: '16px 0',
-    border: '1px solid #d1fae5',
+    border: '1.5px solid #e8e8e8',
+    borderRadius: '1.75rem',
+    padding: '44px 48px',
+    maxWidth: 480,
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  checkIcon: {
+    width: 64,
+    height: 64,
+    borderRadius: '50%',
+    background: 'linear-gradient(135deg, #714DFF 0%, #E151FF 100%)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: '0 auto 16px',
+    color: '#fff',
+    fontSize: 28,
+  },
+  successTitle: {
+    fontSize: 24,
+    fontWeight: 800,
+    background: 'linear-gradient(135deg, #714DFF 0%, #E151FF 100%)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    backgroundClip: 'text',
+    margin: '0 0 16px',
+    letterSpacing: '-0.02em',
+  },
+  successText: { fontSize: 15, color: '#6b7280', margin: 0, lineHeight: 1.7 },
+  confirmedDetails: {
+    background: '#faf8ff',
+    borderRadius: 16,
+    padding: 20,
+    margin: '20px 0',
+    border: '1px solid #ede8ff',
   },
   detailRow: {
     display: 'flex',
     justifyContent: 'space-between',
-    padding: '6px 0',
+    padding: '8px 0',
   },
   detailLabel: { fontSize: 14, color: '#6b7280', fontWeight: 500 },
   detailValue: { fontSize: 14, color: '#1a1a2e', fontWeight: 600 },
@@ -429,20 +602,21 @@ const styles = {
     background: '#fef2f2',
     color: '#dc2626',
     border: '1px solid #fecaca',
-    borderRadius: 8,
-    padding: '10px 16px',
-    marginBottom: 16,
+    borderRadius: 12,
+    padding: '12px 16px',
+    marginBottom: 20,
     fontSize: 14,
+    fontWeight: 500,
   },
   emptyWrap: { textAlign: 'center', padding: '60px 0' },
   emptyText: { color: '#6b7280', fontSize: 15, lineHeight: 1.6 },
   spinner: {
     width: 40,
     height: 40,
-    border: '4px solid #e5e7eb',
-    borderTop: '4px solid #4f46e5',
+    border: '4px solid #ede8ff',
+    borderTop: '4px solid #714DFF',
     borderRadius: '50%',
-    animation: 'spin 0.8s linear infinite',
+    animation: 'niuralSpin 0.8s linear infinite',
   },
   loaderText: { marginTop: 16, color: '#6b7280', fontSize: 15 },
 };

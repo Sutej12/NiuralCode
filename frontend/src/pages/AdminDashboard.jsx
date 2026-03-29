@@ -14,7 +14,7 @@ const STATUS_OPTIONS = [
 ];
 
 const STATUS_COLORS = {
-  Applied: { bg: '#e0e7ff', color: '#3730a3' },
+  Applied: { bg: '#ede9fe', color: '#714DFF' },
   Screened: { bg: '#dbeafe', color: '#1e40af' },
   Shortlisted: { bg: '#fef9c3', color: '#854d0e' },
   'In Interview': { bg: '#fce7f3', color: '#9d174d' },
@@ -55,6 +55,7 @@ export default function AdminDashboard() {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState({});
+  const [rolesOpen, setRolesOpen] = useState(false);
   const [bellOpen, setBellOpen] = useState(false);
   const bellRef = useRef(null);
 
@@ -239,7 +240,7 @@ export default function AdminDashboard() {
   return (
     <div style={{ padding: '24px', maxWidth: '1400px', margin: '0 auto' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-        <h1 style={{ fontSize: '24px', fontWeight: 700, margin: 0 }}>Candidate Dashboard</h1>
+        <h1 style={{ fontSize: '24px', fontWeight: 700, margin: 0, fontFamily: "'Inter Tight', sans-serif" }}>Candidate Dashboard</h1>
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           <span style={{ color: '#6b7280', fontSize: '14px' }}>
             {count} candidate{count !== 1 ? 's' : ''} total
@@ -259,7 +260,7 @@ export default function AdminDashboard() {
               {totalNotifications > 0 && (
                 <span style={{
                   position: 'absolute', top: 0, right: 0,
-                  background: '#dc2626', color: '#fff', fontSize: '10px', fontWeight: 700,
+                  background: '#714DFF', color: '#fff', fontSize: '10px', fontWeight: 700,
                   width: '18px', height: '18px', borderRadius: '50%',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   border: '2px solid #fff',
@@ -273,8 +274,8 @@ export default function AdminDashboard() {
             {bellOpen && (
               <div style={{
                 position: 'absolute', top: '100%', right: 0, marginTop: '8px',
-                width: '380px', background: '#fff', borderRadius: '12px',
-                border: '1px solid #e5e7eb', boxShadow: '0 10px 40px rgba(0,0,0,0.15)',
+                width: '380px', background: '#fff', borderRadius: '16px',
+                border: '1px solid #e5e7eb', boxShadow: '0 8px 32px rgba(0,0,0,0.10)',
                 zIndex: 1000, overflow: 'hidden',
               }}>
                 <div style={{
@@ -284,8 +285,8 @@ export default function AdminDashboard() {
                 }}>
                   <span>Notifications</span>
                   <span style={{
-                    fontSize: '11px', fontWeight: 500, color: '#6b7280',
-                    background: '#f3f4f6', padding: '2px 8px', borderRadius: '9999px',
+                    fontSize: '11px', fontWeight: 500, color: '#714DFF',
+                    background: '#ede9fe', padding: '2px 8px', borderRadius: '9999px',
                   }}>
                     {totalNotifications} new
                   </span>
@@ -327,7 +328,7 @@ export default function AdminDashboard() {
                               style={{
                                 padding: '4px 12px', fontSize: '11px', fontWeight: 600,
                                 background: '#059669', color: '#fff', border: 'none',
-                                borderRadius: '6px', cursor: rescheduleLoading[req.candidate] ? 'not-allowed' : 'pointer',
+                                borderRadius: '9999px', cursor: rescheduleLoading[req.candidate] ? 'not-allowed' : 'pointer',
                                 opacity: rescheduleLoading[req.candidate] ? 0.6 : 1,
                               }}
                             >
@@ -339,7 +340,7 @@ export default function AdminDashboard() {
                               style={{
                                 padding: '4px 12px', fontSize: '11px', fontWeight: 600,
                                 background: '#dc2626', color: '#fff', border: 'none',
-                                borderRadius: '6px', cursor: rescheduleLoading[req.candidate] ? 'not-allowed' : 'pointer',
+                                borderRadius: '9999px', cursor: rescheduleLoading[req.candidate] ? 'not-allowed' : 'pointer',
                                 opacity: rescheduleLoading[req.candidate] ? 0.6 : 1,
                               }}
                             >
@@ -409,61 +410,168 @@ export default function AdminDashboard() {
 
       {/* Manage Roles */}
       {jobs.length > 0 && (
-        <div style={{ marginBottom: '24px' }}>
-          <h2 style={{ fontSize: '16px', fontWeight: 700, color: '#374151', margin: '0 0 12px', textTransform: 'uppercase', letterSpacing: '0.03em' }}>
-            Manage Roles
-          </h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '12px' }}>
+        <div style={{
+          marginBottom: '28px', background: '#fff', borderRadius: '1.75rem',
+          border: '1px solid #e5e7eb', overflow: 'hidden',
+          boxShadow: '0 2px 12px rgba(113,77,255,0.06)',
+        }}>
+          {/* Section Header — clickable to toggle */}
+          <div
+            onClick={() => setRolesOpen(!rolesOpen)}
+            style={{
+              padding: '14px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+              background: 'linear-gradient(135deg, #714DFF 0%, #E151FF 100%)',
+              cursor: 'pointer', userSelect: 'none',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <h2 style={{
+                fontSize: '15px', fontWeight: 700, color: '#fff', margin: 0,
+                fontFamily: "'Inter Tight', sans-serif", letterSpacing: '0.02em',
+              }}>
+                Manage Roles
+              </h2>
+              <span style={{
+                fontSize: '11px', color: 'rgba(255,255,255,0.8)', fontFamily: "'Inter Tight', sans-serif",
+              }}>
+                {jobs.filter(j => j.status === 'Open').length} open · {jobs.filter(j => j.status === 'Paused').length} on hold · {jobs.filter(j => j.status === 'Closed').length} closed
+              </span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <span style={{
+                background: 'rgba(255,255,255,0.2)', borderRadius: '9999px', padding: '4px 12px',
+                fontSize: '12px', fontWeight: 600, color: '#fff',
+              }}>
+                {jobs.length} {jobs.length === 1 ? 'Role' : 'Roles'}
+              </span>
+              <span style={{
+                color: '#fff', fontSize: '14px', transition: 'transform 0.3s ease',
+                display: 'inline-block', transform: rolesOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+              }}>
+                ▼
+              </span>
+            </div>
+          </div>
+
+          {/* Role Cards — collapsible */}
+          <div style={{
+            maxHeight: rolesOpen ? '2000px' : '0px',
+            overflow: 'hidden',
+            transition: 'max-height 0.35s ease',
+          }}>
+          <div style={{ padding: '12px 20px 16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {jobs.map((job) => {
               const st = JOB_STATUS_STYLES[job.status] || JOB_STATUS_STYLES.Open;
               const isLoading = jobActionLoading[job.id];
+              const statusAccent = job.status === 'Open' ? '#059669' : job.status === 'Paused' ? '#d97706' : '#dc2626';
               return (
-                <div key={job.id} style={{
-                  background: '#fff', border: '1px solid #e5e7eb', borderRadius: '10px',
-                  padding: '16px 20px', display: 'flex', alignItems: 'center', gap: '14px',
-                  boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
-                }}>
+                <div
+                  key={job.id}
+                  style={{
+                    background: '#fafafa', borderRadius: '16px',
+                    padding: '16px 20px', display: 'flex', alignItems: 'center', gap: '16px',
+                    borderLeft: `4px solid ${statusAccent}`,
+                    transition: 'all 0.25s ease',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = '#f5f3ff';
+                    e.currentTarget.style.boxShadow = '0 2px 8px rgba(113,77,255,0.08)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = '#fafafa';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
+                >
+                  {/* Role Icon */}
+                  <div style={{
+                    width: '42px', height: '42px', borderRadius: '12px',
+                    background: `linear-gradient(135deg, ${statusAccent}15, ${statusAccent}25)`,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: '18px', flexShrink: 0,
+                  }}>
+                    {job.status === 'Open' ? '💼' : job.status === 'Paused' ? '⏸️' : '🔒'}
+                  </div>
+
+                  {/* Role Info */}
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontWeight: 600, fontSize: '14px', color: '#1a1a2e', marginBottom: '4px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    <div style={{
+                      fontWeight: 600, fontSize: '15px', color: '#1a1a2e', marginBottom: '4px',
+                      overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                      fontFamily: "'Inter Tight', sans-serif",
+                    }}>
                       {job.title}
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
                       <span style={{
-                        display: 'inline-flex', alignItems: 'center', gap: '4px',
-                        padding: '2px 10px', borderRadius: '9999px', fontSize: '11px', fontWeight: 600,
+                        display: 'inline-flex', alignItems: 'center', gap: '5px',
+                        padding: '3px 12px', borderRadius: '9999px', fontSize: '11px', fontWeight: 600,
                         background: st.bg, color: st.color,
+                        border: `1px solid ${statusAccent}30`,
                       }}>
-                        {st.icon} {job.status}
+                        <span style={{
+                          width: '6px', height: '6px', borderRadius: '50%',
+                          background: statusAccent, display: 'inline-block',
+                        }} />
+                        {job.status}
                       </span>
-                      <span style={{ fontSize: '12px', color: '#9ca3af' }}>{job.team}</span>
+                      {job.team && (
+                        <span style={{
+                          fontSize: '12px', color: '#6b7280', fontFamily: "'Inter Tight', sans-serif",
+                          display: 'inline-flex', alignItems: 'center', gap: '4px',
+                        }}>
+                          <span style={{ opacity: 0.5 }}>│</span> {job.team}
+                        </span>
+                      )}
+                      {job.location && (
+                        <span style={{
+                          fontSize: '12px', color: '#9ca3af', fontFamily: "'Inter Tight', sans-serif",
+                          display: 'inline-flex', alignItems: 'center', gap: '4px',
+                        }}>
+                          📍 {job.location}
+                        </span>
+                      )}
                     </div>
                   </div>
-                  <div style={{ display: 'flex', gap: '6px', flexShrink: 0 }}>
+
+                  {/* Action Buttons */}
+                  <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
                     {job.status === 'Open' && (
                       <>
                         <button
                           onClick={() => handleJobStatusChange(job.id, 'Paused')}
                           disabled={!!isLoading}
                           style={{
-                            padding: '6px 12px', borderRadius: '6px', border: '1px solid #d97706',
-                            background: isLoading === 'Paused' ? '#fef3c7' : '#fff',
-                            color: '#d97706', fontSize: '12px', fontWeight: 600, cursor: isLoading ? 'not-allowed' : 'pointer',
+                            padding: '7px 16px', borderRadius: '10px', border: '1.5px solid #d97706',
+                            background: isLoading === 'Paused' ? '#fef3c7' : '#fffbeb',
+                            color: '#b45309', fontSize: '12px', fontWeight: 600,
+                            cursor: isLoading ? 'not-allowed' : 'pointer',
                             opacity: isLoading ? 0.6 : 1,
+                            fontFamily: "'Inter Tight', sans-serif",
+                            transition: 'all 0.2s ease',
+                            display: 'inline-flex', alignItems: 'center', gap: '4px',
                           }}
+                          onMouseEnter={(e) => { if (!isLoading) { e.currentTarget.style.background = '#fef3c7'; e.currentTarget.style.transform = 'translateY(-1px)'; } }}
+                          onMouseLeave={(e) => { e.currentTarget.style.background = '#fffbeb'; e.currentTarget.style.transform = 'translateY(0)'; }}
                         >
-                          {isLoading === 'Paused' ? 'Holding...' : '⏸️ Hold'}
+                          ⏸ {isLoading === 'Paused' ? 'Holding...' : 'Hold'}
                         </button>
                         <button
                           onClick={() => handleJobStatusChange(job.id, 'Closed')}
                           disabled={!!isLoading}
                           style={{
-                            padding: '6px 12px', borderRadius: '6px', border: '1px solid #dc2626',
-                            background: isLoading === 'Closed' ? '#fee2e2' : '#fff',
-                            color: '#dc2626', fontSize: '12px', fontWeight: 600, cursor: isLoading ? 'not-allowed' : 'pointer',
+                            padding: '7px 16px', borderRadius: '10px', border: '1.5px solid #dc2626',
+                            background: isLoading === 'Closed' ? '#fee2e2' : '#fef2f2',
+                            color: '#b91c1c', fontSize: '12px', fontWeight: 600,
+                            cursor: isLoading ? 'not-allowed' : 'pointer',
                             opacity: isLoading ? 0.6 : 1,
+                            fontFamily: "'Inter Tight', sans-serif",
+                            transition: 'all 0.2s ease',
+                            display: 'inline-flex', alignItems: 'center', gap: '4px',
                           }}
+                          onMouseEnter={(e) => { if (!isLoading) { e.currentTarget.style.background = '#fee2e2'; e.currentTarget.style.transform = 'translateY(-1px)'; } }}
+                          onMouseLeave={(e) => { e.currentTarget.style.background = '#fef2f2'; e.currentTarget.style.transform = 'translateY(0)'; }}
                         >
-                          {isLoading === 'Closed' ? 'Closing...' : '🔴 Close'}
+                          ✕ {isLoading === 'Closed' ? 'Closing...' : 'Close'}
                         </button>
                       </>
                     )}
@@ -473,23 +581,36 @@ export default function AdminDashboard() {
                           onClick={() => handleReopenJob(job.id)}
                           disabled={!!isLoading}
                           style={{
-                            padding: '6px 12px', borderRadius: '6px', border: '1px solid #059669',
-                            background: '#fff', color: '#059669', fontSize: '12px', fontWeight: 600,
-                            cursor: isLoading ? 'not-allowed' : 'pointer', opacity: isLoading ? 0.6 : 1,
+                            padding: '7px 16px', borderRadius: '10px', border: '1.5px solid #059669',
+                            background: isLoading === 'Open' ? '#d1fae5' : '#ecfdf5',
+                            color: '#047857', fontSize: '12px', fontWeight: 600,
+                            cursor: isLoading ? 'not-allowed' : 'pointer',
+                            opacity: isLoading ? 0.6 : 1,
+                            fontFamily: "'Inter Tight', sans-serif",
+                            transition: 'all 0.2s ease',
+                            display: 'inline-flex', alignItems: 'center', gap: '4px',
                           }}
+                          onMouseEnter={(e) => { if (!isLoading) { e.currentTarget.style.background = '#d1fae5'; e.currentTarget.style.transform = 'translateY(-1px)'; } }}
+                          onMouseLeave={(e) => { e.currentTarget.style.background = '#ecfdf5'; e.currentTarget.style.transform = 'translateY(0)'; }}
                         >
-                          {isLoading === 'Open' ? 'Reopening...' : '🟢 Reopen'}
+                          ▶ {isLoading === 'Open' ? 'Reopening...' : 'Reopen'}
                         </button>
                         <button
                           onClick={() => handleJobStatusChange(job.id, 'Closed')}
                           disabled={!!isLoading}
                           style={{
-                            padding: '6px 12px', borderRadius: '6px', border: '1px solid #dc2626',
-                            background: '#fff', color: '#dc2626', fontSize: '12px', fontWeight: 600,
-                            cursor: isLoading ? 'not-allowed' : 'pointer', opacity: isLoading ? 0.6 : 1,
+                            padding: '7px 16px', borderRadius: '10px', border: '1.5px solid #dc2626',
+                            background: '#fef2f2', color: '#b91c1c', fontSize: '12px', fontWeight: 600,
+                            cursor: isLoading ? 'not-allowed' : 'pointer',
+                            opacity: isLoading ? 0.6 : 1,
+                            fontFamily: "'Inter Tight', sans-serif",
+                            transition: 'all 0.2s ease',
+                            display: 'inline-flex', alignItems: 'center', gap: '4px',
                           }}
+                          onMouseEnter={(e) => { if (!isLoading) { e.currentTarget.style.background = '#fee2e2'; e.currentTarget.style.transform = 'translateY(-1px)'; } }}
+                          onMouseLeave={(e) => { e.currentTarget.style.background = '#fef2f2'; e.currentTarget.style.transform = 'translateY(0)'; }}
                         >
-                          {isLoading === 'Closed' ? 'Closing...' : '🔴 Close'}
+                          ✕ {isLoading === 'Closed' ? 'Closing...' : 'Close'}
                         </button>
                       </>
                     )}
@@ -498,12 +619,19 @@ export default function AdminDashboard() {
                         onClick={() => handleReopenJob(job.id)}
                         disabled={!!isLoading}
                         style={{
-                          padding: '6px 12px', borderRadius: '6px', border: '1px solid #059669',
-                          background: '#fff', color: '#059669', fontSize: '12px', fontWeight: 600,
-                          cursor: isLoading ? 'not-allowed' : 'pointer', opacity: isLoading ? 0.6 : 1,
+                          padding: '7px 16px', borderRadius: '10px', border: '1.5px solid #059669',
+                          background: isLoading === 'Open' ? '#d1fae5' : '#ecfdf5',
+                          color: '#047857', fontSize: '12px', fontWeight: 600,
+                          cursor: isLoading ? 'not-allowed' : 'pointer',
+                          opacity: isLoading ? 0.6 : 1,
+                          fontFamily: "'Inter Tight', sans-serif",
+                          transition: 'all 0.2s ease',
+                          display: 'inline-flex', alignItems: 'center', gap: '4px',
                         }}
+                        onMouseEnter={(e) => { if (!isLoading) { e.currentTarget.style.background = '#d1fae5'; e.currentTarget.style.transform = 'translateY(-1px)'; } }}
+                        onMouseLeave={(e) => { e.currentTarget.style.background = '#ecfdf5'; e.currentTarget.style.transform = 'translateY(0)'; }}
                       >
-                        {isLoading === 'Open' ? 'Reopening...' : '🟢 Reopen'}
+                        ▶ {isLoading === 'Open' ? 'Reopening...' : 'Reopen'}
                       </button>
                     )}
                   </div>
@@ -511,20 +639,21 @@ export default function AdminDashboard() {
               );
             })}
           </div>
+          </div>
         </div>
       )}
 
       {/* Filters */}
       <div style={{
         display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'flex-end',
-        marginBottom: '20px', padding: '16px', background: '#f9fafb', borderRadius: '8px', border: '1px solid #e5e7eb',
+        marginBottom: '20px', padding: '16px', background: '#fff', borderRadius: '1.75rem', border: '1px solid #e5e7eb',
       }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
           <label style={{ fontSize: '12px', fontWeight: 600, color: '#374151' }}>Role</label>
           <select
             value={filterJob}
             onChange={(e) => setFilterJob(e.target.value)}
-            style={{ padding: '8px 12px', borderRadius: '6px', border: '1px solid #d1d5db', fontSize: '14px', minWidth: '180px' }}
+            style={{ padding: '8px 12px', borderRadius: '12px', border: '1.5px solid #d1d5db', fontSize: '14px', minWidth: '180px' }}
           >
             <option value="">All Roles</option>
             {jobs.map((job) => (
@@ -538,7 +667,7 @@ export default function AdminDashboard() {
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            style={{ padding: '8px 12px', borderRadius: '6px', border: '1px solid #d1d5db', fontSize: '14px', minWidth: '150px' }}
+            style={{ padding: '8px 12px', borderRadius: '12px', border: '1.5px solid #d1d5db', fontSize: '14px', minWidth: '150px' }}
           >
             <option value="">All Statuses</option>
             {STATUS_OPTIONS.map((s) => (
@@ -553,7 +682,7 @@ export default function AdminDashboard() {
             type="date"
             value={filterDateFrom}
             onChange={(e) => setFilterDateFrom(e.target.value)}
-            style={{ padding: '8px 12px', borderRadius: '6px', border: '1px solid #d1d5db', fontSize: '14px' }}
+            style={{ padding: '8px 12px', borderRadius: '12px', border: '1.5px solid #d1d5db', fontSize: '14px' }}
           />
         </div>
 
@@ -563,56 +692,58 @@ export default function AdminDashboard() {
             type="date"
             value={filterDateTo}
             onChange={(e) => setFilterDateTo(e.target.value)}
-            style={{ padding: '8px 12px', borderRadius: '6px', border: '1px solid #d1d5db', fontSize: '14px' }}
+            style={{ padding: '8px 12px', borderRadius: '12px', border: '1.5px solid #d1d5db', fontSize: '14px' }}
           />
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-          <label style={{ fontSize: '12px', fontWeight: 600, color: '#374151' }}>Referred</label>
-          <button
-            onClick={() => setFilterReferred(!filterReferred)}
-            style={{
-              padding: '8px 16px', borderRadius: '6px', fontSize: '14px', cursor: 'pointer',
-              border: filterReferred ? '2px solid #4f46e5' : '1px solid #d1d5db',
-              background: filterReferred ? '#eef2ff' : '#fff',
-              color: filterReferred ? '#4f46e5' : '#374151',
-              fontWeight: filterReferred ? 600 : 400,
-            }}
-          >
-            {filterReferred ? '🏷️ Referred Only' : 'All'}
-          </button>
-        </div>
+        <button
+          onClick={() => setFilterReferred(!filterReferred)}
+          style={{
+            padding: '8px 18px', borderRadius: '9999px', fontSize: '13px', cursor: 'pointer',
+            border: filterReferred ? '2px solid #714DFF' : '1.5px solid #d1d5db',
+            background: filterReferred ? 'linear-gradient(135deg, #714DFF 0%, #E151FF 100%)' : '#fff',
+            color: filterReferred ? '#fff' : '#374151',
+            fontWeight: 600, alignSelf: 'flex-end',
+            display: 'inline-flex', alignItems: 'center', gap: '6px',
+            transition: 'all 0.2s ease',
+            boxShadow: filterReferred ? '0 2px 10px rgba(113,77,255,0.3)' : 'none',
+          }}
+        >
+          🏷️ Referred Candidates {filterReferred && '✓'}
+        </button>
 
         <button
           onClick={clearFilters}
           style={{
-            padding: '8px 16px', borderRadius: '6px', border: '1px solid #d1d5db',
-            background: '#fff', cursor: 'pointer', fontSize: '14px', color: '#374151',
+            padding: '8px 16px', borderRadius: '9999px', border: '1.5px solid #d1d5db',
+            background: '#fff', cursor: 'pointer', fontSize: '13px', color: '#6b7280',
+            fontWeight: 500, alignSelf: 'flex-end',
+            transition: 'all 0.2s ease',
           }}
         >
-          Clear
+          ✕ Clear Filters
         </button>
       </div>
 
       {/* Table */}
       {loading ? (
-        <div style={{ textAlign: 'center', padding: '60px 0', color: '#6b7280' }}>
+        <div style={{ textAlign: 'center', padding: '60px 0', color: '#6b7280', background: '#fff', borderRadius: '1.75rem', border: '1px solid #e5e7eb' }}>
           <div style={{ fontSize: '16px', marginBottom: '8px' }}>Loading candidates...</div>
         </div>
       ) : candidates.length === 0 ? (
         <div style={{
           textAlign: 'center', padding: '60px 0', color: '#6b7280',
-          background: '#f9fafb', borderRadius: '8px', border: '1px solid #e5e7eb',
+          background: '#fff', borderRadius: '1.75rem', border: '1px solid #e5e7eb',
         }}>
           <div style={{ fontSize: '18px', marginBottom: '8px' }}>No candidates found</div>
           <div style={{ fontSize: '14px' }}>Try adjusting your filters or check back later.</div>
         </div>
       ) : (
         <>
-          <div style={{ overflowX: 'auto', borderRadius: '8px', border: '1px solid #e5e7eb' }}>
+          <div style={{ overflowX: 'auto', borderRadius: '1.75rem', border: '1px solid #e5e7eb', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
               <thead>
-                <tr style={{ background: '#f9fafb' }}>
+                <tr style={{ background: '#714DFF' }}>
                   <th style={thStyle}>Name</th>
                   <th style={thStyle}>Role Applied</th>
                   <th style={thStyle}>Date</th>
@@ -638,8 +769,8 @@ export default function AdminDashboard() {
                           {c.is_referred && (
                             <span style={{
                               display: 'inline-block', padding: '1px 6px', borderRadius: '9999px',
-                              fontSize: '10px', fontWeight: 700, background: '#eef2ff', color: '#4f46e5',
-                              border: '1px solid #c7d2fe',
+                              fontSize: '10px', fontWeight: 700, background: '#ede9fe', color: '#714DFF',
+                              border: '1px solid #ddd6fe',
                             }}>
                               Referred
                             </span>
@@ -676,7 +807,7 @@ export default function AdminDashboard() {
                             <button
                               onClick={(e) => handleScreen(e, c.id)}
                               disabled={actionLoading[`screen-${c.id}`]}
-                              style={actionBtnStyle('#4f46e5', actionLoading[`screen-${c.id}`])}
+                              style={actionBtnStyle('#714DFF', actionLoading[`screen-${c.id}`])}
                             >
                               {actionLoading[`screen-${c.id}`] ? 'Screening...' : 'Screen'}
                             </button>
@@ -710,7 +841,7 @@ export default function AdminDashboard() {
                 onClick={() => handlePageChange('prev')}
                 disabled={!prevUrl}
                 style={{
-                  padding: '8px 16px', borderRadius: '6px', border: '1px solid #d1d5db',
+                  padding: '8px 16px', borderRadius: '9999px', border: '1px solid #d1d5db',
                   background: prevUrl ? '#fff' : '#f3f4f6', cursor: prevUrl ? 'pointer' : 'not-allowed',
                   color: prevUrl ? '#374151' : '#9ca3af',
                 }}
@@ -721,7 +852,7 @@ export default function AdminDashboard() {
                 onClick={() => handlePageChange('next')}
                 disabled={!nextUrl}
                 style={{
-                  padding: '8px 16px', borderRadius: '6px', border: '1px solid #d1d5db',
+                  padding: '8px 16px', borderRadius: '9999px', border: '1px solid #d1d5db',
                   background: nextUrl ? '#fff' : '#f3f4f6', cursor: nextUrl ? 'pointer' : 'not-allowed',
                   color: nextUrl ? '#374151' : '#9ca3af',
                 }}
@@ -738,7 +869,7 @@ export default function AdminDashboard() {
 
 const thStyle = {
   textAlign: 'left', padding: '12px 16px', fontWeight: 600, fontSize: '12px',
-  textTransform: 'uppercase', color: '#6b7280', letterSpacing: '0.05em',
+  textTransform: 'uppercase', color: '#ffffff', letterSpacing: '0.05em',
 };
 
 const tdStyle = {
@@ -747,7 +878,7 @@ const tdStyle = {
 
 function actionBtnStyle(color, disabled) {
   return {
-    padding: '4px 12px', borderRadius: '6px', border: 'none',
+    padding: '4px 12px', borderRadius: '9999px', border: 'none',
     background: disabled ? '#d1d5db' : color, color: '#fff',
     cursor: disabled ? 'not-allowed' : 'pointer', fontSize: '12px', fontWeight: 600,
     whiteSpace: 'nowrap',

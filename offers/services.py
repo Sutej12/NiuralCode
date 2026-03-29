@@ -44,9 +44,11 @@ Bonus: {context['bonus'] or 'N/A'}
 Reporting Manager: {context['reporting_manager']}
 Custom Terms: {context['custom_terms'] or 'None'}
 
+Company Name: Niural
+
 Requirements:
 - Use clean, professional HTML with inline CSS
-- Include company header placeholder
+- Include "Niural" as the company name in the header and throughout the letter
 - Include sections: greeting, position details, compensation, benefits overview, terms, signature block
 - Make it look polished and corporate
 - Include a placeholder for the candidate's signature at the bottom
@@ -96,15 +98,15 @@ def _template_offer_letter(context):
 </style></head>
 <body>
     <div class="header">
-        <h1>Offer of Employment</h1>
-        <p>Confidential</p>
+        <h1>Niural</h1>
+        <p>Offer of Employment &mdash; Confidential</p>
     </div>
 
     <p>Dear {context['candidate_name']},</p>
 
     <p>We are thrilled to extend an offer of employment for the position of
     <strong>{context['job_title']}</strong>. After careful consideration, we believe
-    your skills and experience make you an excellent fit for our team.</p>
+    your skills and experience make you an excellent fit for the Niural team.</p>
 
     <h2>Position Details</h2>
     <table class="compensation-table">
@@ -133,8 +135,8 @@ def _template_offer_letter(context):
     <p>Please indicate your acceptance by signing below. This offer is valid for 7 business days.</p>
 
     <div class="signature-block">
-        <p>We look forward to welcoming you to the team!</p>
-        <p>Sincerely,<br>The Hiring Team</p>
+        <p>We look forward to welcoming you to Niural!</p>
+        <p>Sincerely,<br>The Hiring Team at Niural</p>
 
         <div class="signature-line">
             <p>Candidate Signature</p>
@@ -156,7 +158,7 @@ def send_offer_email(offer):
         f"{offer.job_title}.\n\n"
         f"Please review and sign your offer letter at:\n{sign_url}\n\n"
         f"This offer is valid for 7 business days.\n\n"
-        f"Best regards,\nThe Hiring Team"
+        f"Best regards,\nThe Hiring Team at Niural"
     )
 
     html_body = f"""
@@ -173,7 +175,7 @@ def send_offer_email(offer):
             </a>
         </div>
         <p style="color: #6b7280; font-size: 13px;">This offer is valid for 7 business days.</p>
-        <p>Best regards,<br>The Hiring Team</p>
+        <p>Best regards,<br>The Hiring Team at Niural</p>
     </div>
     """
 

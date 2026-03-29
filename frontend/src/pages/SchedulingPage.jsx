@@ -215,14 +215,15 @@ const SchedulingPage = () => {
         {hasTentativeSlots && !hasConfirmedSlot && (
           <div style={{
             marginTop: 16, padding: '16px 20px',
-            background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 10,
+            background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '1.75rem',
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            transition: 'all 0.3s ease',
           }}>
             <div>
-              <p style={{ margin: 0, fontSize: 14, fontWeight: 600, color: '#92400e' }}>
+              <p style={{ margin: 0, fontSize: 14, fontWeight: 600, color: '#92400e', fontFamily: "'Inter Tight', sans-serif" }}>
                 Candidate hasn't responded yet
               </p>
-              <p style={{ margin: '4px 0 0', fontSize: 13, color: '#6b7280' }}>
+              <p style={{ margin: '4px 0 0', fontSize: 13, color: '#6b7280', fontFamily: "'Inter Tight', sans-serif" }}>
                 Send a reminder email to select a slot or request a different time.
               </p>
             </div>
@@ -232,8 +233,10 @@ const SchedulingPage = () => {
               style={{
                 padding: '8px 20px', fontSize: 13, fontWeight: 600,
                 color: '#fff', background: '#d97706', border: 'none',
-                borderRadius: 8, cursor: followingUp ? 'not-allowed' : 'pointer',
+                borderRadius: 9999, cursor: followingUp ? 'not-allowed' : 'pointer',
                 opacity: followingUp ? 0.6 : 1, whiteSpace: 'nowrap',
+                fontFamily: "'Inter Tight', sans-serif",
+                transition: 'all 0.3s ease',
               }}
             >
               {followingUp ? 'Sending...' : '📧 Send Follow-Up'}
@@ -250,32 +253,35 @@ const styles = {
     maxWidth: 800,
     margin: '0 auto',
     padding: '40px 20px',
-    fontFamily:
-      "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+    fontFamily: "'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
   },
   heading: {
     fontSize: 28,
     fontWeight: 700,
     color: '#1a1a2e',
     margin: '0 0 24px',
+    fontFamily: "'Inter Tight', sans-serif",
   },
   candidateInfo: {
     background: '#f9fafb',
-    border: '1px solid #e5e7eb',
-    borderRadius: 12,
+    border: '1px solid #e8e8e8',
+    borderRadius: '1.75rem',
     padding: 20,
     marginBottom: 24,
+    transition: 'all 0.3s ease',
   },
   candidateName: {
     fontSize: 20,
     fontWeight: 600,
     color: '#1a1a2e',
     margin: '0 0 8px',
+    fontFamily: "'Inter Tight', sans-serif",
   },
   statusText: {
     fontSize: 14,
     color: '#6b7280',
     margin: 0,
+    fontFamily: "'Inter Tight', sans-serif",
   },
   section: {
     marginBottom: 32,
@@ -285,6 +291,7 @@ const styles = {
     fontWeight: 600,
     color: '#1a1a2e',
     margin: '0 0 12px',
+    fontFamily: "'Inter Tight', sans-serif",
   },
   form: {
     display: 'flex',
@@ -295,29 +302,35 @@ const styles = {
     flex: '1 1 300px',
     padding: '10px 16px',
     fontSize: 14,
-    border: '1px solid #d1d5db',
-    borderRadius: 8,
+    border: '1px solid #e8e8e8',
+    borderRadius: 12,
     outline: 'none',
+    fontFamily: "'Inter Tight', sans-serif",
+    transition: 'all 0.3s ease',
   },
   btnPrimary: {
     padding: '10px 24px',
     fontSize: 14,
     fontWeight: 500,
     color: '#fff',
-    background: '#4f46e5',
+    background: '#714DFF',
     border: 'none',
-    borderRadius: 8,
+    borderRadius: 9999,
     cursor: 'pointer',
+    fontFamily: "'Inter Tight', sans-serif",
+    transition: 'all 0.3s ease',
   },
   btnOutline: {
     padding: '8px 16px',
     fontSize: 13,
     fontWeight: 500,
-    color: '#4f46e5',
+    color: '#714DFF',
     background: '#fff',
-    border: '1px solid #4f46e5',
-    borderRadius: 8,
+    border: '1px solid #714DFF',
+    borderRadius: 9999,
     cursor: 'pointer',
+    fontFamily: "'Inter Tight', sans-serif",
+    transition: 'all 0.3s ease',
   },
   btnConfirm: {
     padding: '8px 16px',
@@ -326,23 +339,27 @@ const styles = {
     color: '#fff',
     background: '#059669',
     border: 'none',
-    borderRadius: 8,
+    borderRadius: 9999,
     cursor: 'pointer',
+    fontFamily: "'Inter Tight', sans-serif",
+    transition: 'all 0.3s ease',
   },
   linkBox: {
     display: 'flex',
     alignItems: 'center',
     gap: 12,
     background: '#f9fafb',
-    border: '1px solid #e5e7eb',
-    borderRadius: 8,
+    border: '1px solid #e8e8e8',
+    borderRadius: '1.75rem',
     padding: '12px 16px',
+    transition: 'all 0.3s ease',
   },
   linkCode: {
     flex: 1,
     fontSize: 13,
     color: '#374151',
     wordBreak: 'break-all',
+    fontFamily: "'Inter Tight', sans-serif",
   },
   slotList: {
     display: 'flex',
@@ -354,9 +371,10 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'space-between',
     background: '#fff',
-    border: '1px solid #e5e7eb',
-    borderRadius: 10,
+    border: '1px solid #e8e8e8',
+    borderRadius: '1.75rem',
     padding: '14px 18px',
+    transition: 'all 0.3s ease',
   },
   slotInfo: {
     display: 'flex',
@@ -368,34 +386,41 @@ const styles = {
     fontWeight: 500,
     color: '#1a1a2e',
     margin: 0,
+    fontFamily: "'Inter Tight', sans-serif",
   },
   statusBadge: {
     fontSize: 12,
     fontWeight: 600,
-    borderRadius: 6,
+    borderRadius: 9999,
     padding: '3px 10px',
+    fontFamily: "'Inter Tight', sans-serif",
   },
   emptyText: {
     color: '#6b7280',
     fontSize: 14,
+    fontFamily: "'Inter Tight', sans-serif",
   },
   errorBanner: {
     background: '#fef2f2',
     color: '#dc2626',
     border: '1px solid #fecaca',
-    borderRadius: 8,
+    borderRadius: '1.75rem',
     padding: '10px 16px',
     marginBottom: 16,
     fontSize: 14,
+    fontFamily: "'Inter Tight', sans-serif",
+    transition: 'all 0.3s ease',
   },
   successBanner: {
     background: '#f0fdf4',
     color: '#166534',
     border: '1px solid #bbf7d0',
-    borderRadius: 8,
+    borderRadius: '1.75rem',
     padding: '10px 16px',
     marginBottom: 16,
     fontSize: 14,
+    fontFamily: "'Inter Tight', sans-serif",
+    transition: 'all 0.3s ease',
   },
   loaderWrap: {
     display: 'flex',
@@ -407,8 +432,8 @@ const styles = {
   spinner: {
     width: 40,
     height: 40,
-    border: '4px solid #e5e7eb',
-    borderTop: '4px solid #4f46e5',
+    border: '4px solid #e8e8e8',
+    borderTop: '4px solid #714DFF',
     borderRadius: '50%',
     animation: 'spin 0.8s linear infinite',
   },
@@ -416,6 +441,7 @@ const styles = {
     marginTop: 16,
     color: '#6b7280',
     fontSize: 15,
+    fontFamily: "'Inter Tight', sans-serif",
   },
 };
 

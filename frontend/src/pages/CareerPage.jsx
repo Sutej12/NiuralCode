@@ -65,7 +65,16 @@ const CareerPage = () => {
     return (
       <div style={styles.errorWrap}>
         <p style={styles.errorText}>{error}</p>
-        <button style={styles.retryBtn} onClick={() => window.location.reload()}>
+        <button
+          style={styles.retryBtn}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = '#6041e0';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = '#714DFF';
+          }}
+          onClick={() => window.location.reload()}
+        >
           Retry
         </button>
       </div>
@@ -74,13 +83,17 @@ const CareerPage = () => {
 
   return (
     <div style={styles.page}>
+      {/* Gradient Hero Header */}
       <header style={styles.header}>
-        <h1 style={styles.heading}>Career Opportunities</h1>
-        <p style={styles.subheading}>
-          Join our team and help build something meaningful.
-        </p>
+        <div style={styles.heroBar}>
+          <h1 style={styles.heading}>Career Opportunities</h1>
+          <p style={styles.subheading}>
+            Join our team and help build something meaningful.
+          </p>
+        </div>
       </header>
 
+      {/* Filter Bar */}
       <div style={styles.filterBar}>
         <input
           type="text"
@@ -115,14 +128,29 @@ const CareerPage = () => {
         </select>
       </div>
 
+      {/* Job Listings */}
       {filtered.length === 0 ? (
         <div style={styles.empty}>
           <p style={styles.emptyText}>No positions match your search criteria.</p>
         </div>
       ) : (
         <div style={styles.grid}>
-          {filtered.map((job) => (
-            <div key={job.id} style={styles.card}>
+          {filtered.map((job, index) => (
+            <div
+              key={job.id}
+              style={{
+                ...styles.card,
+                animationDelay: `${index * 0.07}s`,
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)';
+                e.currentTarget.style.transform = 'translateY(-2px)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.06)';
+                e.currentTarget.style.transform = 'translateY(0)';
+              }}
+            >
               <div style={styles.cardBody}>
                 <h2 style={styles.cardTitle}>{job.title}</h2>
                 <div style={styles.meta}>
@@ -147,12 +175,26 @@ const CareerPage = () => {
               <div style={styles.cardFooter}>
                 <button
                   style={styles.btnOutline}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = '#714DFF';
+                    e.currentTarget.style.color = '#fff';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = '#fff';
+                    e.currentTarget.style.color = '#714DFF';
+                  }}
                   onClick={() => navigate(`/jobs/${job.id}`)}
                 >
                   View Details
                 </button>
                 <button
                   style={styles.btnPrimary}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = '#6041e0';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = '#714DFF';
+                  }}
                   onClick={() => navigate(`/apply/${job.id}`)}
                 >
                   Apply Now
@@ -168,87 +210,114 @@ const CareerPage = () => {
 
 const styles = {
   page: {
-    maxWidth: 1100,
-    margin: '0 auto',
-    padding: '40px 20px',
-    fontFamily:
-      "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+    background: '#fafafa',
+    minHeight: '100vh',
+    fontFamily: "var(--font-inter-tight, 'Inter Tight', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif)",
   },
   header: {
+    marginBottom: 48,
+  },
+  heroBar: {
+    background: 'linear-gradient(135deg, #714DFF 0%, #E151FF 100%)',
+    padding: '64px 24px 56px',
     textAlign: 'center',
-    marginBottom: 36,
   },
   heading: {
-    fontSize: 32,
+    fontSize: 40,
     fontWeight: 700,
-    color: '#1a1a2e',
-    margin: '0 0 8px',
+    color: '#fff',
+    margin: '0 0 12px',
+    letterSpacing: '-0.02em',
   },
   subheading: {
-    fontSize: 16,
-    color: '#6b7280',
+    fontSize: 18,
+    color: 'rgba(255,255,255,0.85)',
     margin: 0,
+    fontWeight: 400,
   },
   filterBar: {
     display: 'flex',
-    gap: 12,
+    gap: 14,
     flexWrap: 'wrap',
-    marginBottom: 32,
+    maxWidth: 1100,
+    margin: '0 auto 40px',
+    padding: '0 24px',
   },
   searchInput: {
-    flex: '1 1 300px',
-    padding: '10px 16px',
-    fontSize: 14,
-    border: '1px solid #d1d5db',
-    borderRadius: 8,
+    flex: '1 1 340px',
+    padding: '14px 22px',
+    fontSize: 15,
+    border: '1px solid #e8e8e8',
+    borderRadius: 28,
     outline: 'none',
+    background: '#fff',
+    color: '#1a1a2e',
+    fontFamily: 'inherit',
+    transition: 'border-color 0.2s, box-shadow 0.2s',
   },
   select: {
-    padding: '10px 16px',
-    fontSize: 14,
-    border: '1px solid #d1d5db',
-    borderRadius: 8,
+    padding: '14px 22px',
+    fontSize: 15,
+    border: '1px solid #e8e8e8',
+    borderRadius: 9999,
     background: '#fff',
     outline: 'none',
-    minWidth: 180,
+    minWidth: 190,
+    color: '#1a1a2e',
+    fontFamily: 'inherit',
+    cursor: 'pointer',
+    transition: 'border-color 0.2s',
+    WebkitAppearance: 'none',
+    MozAppearance: 'none',
+    appearance: 'none',
+    backgroundImage: `url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%236b7280' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`,
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'right 18px center',
+    paddingRight: 44,
   },
   grid: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-    gap: 24,
+    gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))',
+    gap: 28,
+    maxWidth: 1100,
+    margin: '0 auto',
+    padding: '0 24px 64px',
   },
   card: {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
     background: '#fff',
-    border: '1px solid #e5e7eb',
-    borderRadius: 12,
-    padding: 24,
-    transition: 'box-shadow 0.2s',
+    border: '1px solid #e8e8e8',
+    borderRadius: '1.75rem',
+    padding: 28,
+    transition: 'box-shadow 0.25s ease, transform 0.25s ease',
     boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
+    animation: 'fadeInUp 0.5s ease both',
   },
   cardBody: {
-    marginBottom: 20,
+    marginBottom: 24,
   },
   cardTitle: {
     fontSize: 20,
     fontWeight: 600,
     color: '#1a1a2e',
-    margin: '0 0 12px',
+    margin: '0 0 14px',
+    letterSpacing: '-0.01em',
   },
   meta: {
     display: 'flex',
     flexWrap: 'wrap',
     gap: 8,
-    marginBottom: 10,
+    marginBottom: 12,
   },
   tag: {
     fontSize: 13,
-    color: '#374151',
-    background: '#f3f4f6',
-    borderRadius: 6,
-    padding: '4px 10px',
+    fontWeight: 500,
+    color: '#714DFF',
+    background: '#ede9fe',
+    borderRadius: 9999,
+    padding: '5px 14px',
   },
   tagIcon: {
     marginRight: 4,
@@ -258,95 +327,123 @@ const styles = {
     fontWeight: 600,
     color: '#065f46',
     background: '#d1fae5',
-    borderRadius: 6,
-    padding: '4px 10px',
+    borderRadius: 9999,
+    padding: '5px 14px',
   },
   experience: {
     fontSize: 14,
     color: '#6b7280',
-    margin: '8px 0 0',
+    margin: '10px 0 0',
   },
   cardFooter: {
     display: 'flex',
-    gap: 10,
+    gap: 12,
   },
   btnOutline: {
     flex: 1,
-    padding: '10px 0',
+    padding: '11px 0',
     fontSize: 14,
-    fontWeight: 500,
-    color: '#4f46e5',
+    fontWeight: 600,
+    color: '#714DFF',
     background: '#fff',
-    border: '1px solid #4f46e5',
-    borderRadius: 8,
+    border: '1.5px solid #714DFF',
+    borderRadius: 9999,
     cursor: 'pointer',
+    fontFamily: 'inherit',
+    transition: 'background 0.2s, color 0.2s',
   },
   btnPrimary: {
     flex: 1,
-    padding: '10px 0',
+    padding: '11px 0',
     fontSize: 14,
-    fontWeight: 500,
+    fontWeight: 600,
     color: '#fff',
-    background: '#4f46e5',
+    background: '#714DFF',
     border: 'none',
-    borderRadius: 8,
+    borderRadius: 9999,
     cursor: 'pointer',
+    fontFamily: 'inherit',
+    transition: 'background 0.2s',
   },
   loaderWrap: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    minHeight: '60vh',
+    minHeight: '80vh',
+    background: '#fafafa',
+    fontFamily: "var(--font-inter-tight, 'Inter Tight', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif)",
   },
   spinner: {
-    width: 40,
-    height: 40,
-    border: '4px solid #e5e7eb',
-    borderTop: '4px solid #4f46e5',
+    width: 44,
+    height: 44,
+    border: '4px solid #ede9fe',
+    borderTop: '4px solid #714DFF',
     borderRadius: '50%',
     animation: 'spin 0.8s linear infinite',
   },
   loaderText: {
-    marginTop: 16,
+    marginTop: 18,
     color: '#6b7280',
     fontSize: 15,
+    fontWeight: 500,
   },
   errorWrap: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    minHeight: '60vh',
+    minHeight: '80vh',
+    background: '#fafafa',
+    fontFamily: "var(--font-inter-tight, 'Inter Tight', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif)",
   },
   errorText: {
     color: '#dc2626',
     fontSize: 16,
-    marginBottom: 16,
+    marginBottom: 20,
+    fontWeight: 500,
   },
   retryBtn: {
-    padding: '10px 24px',
+    padding: '12px 32px',
     fontSize: 14,
+    fontWeight: 600,
     color: '#fff',
-    background: '#4f46e5',
+    background: '#714DFF',
     border: 'none',
-    borderRadius: 8,
+    borderRadius: 9999,
     cursor: 'pointer',
+    fontFamily: 'inherit',
+    transition: 'background 0.2s',
   },
   empty: {
     textAlign: 'center',
-    padding: '60px 0',
+    padding: '80px 24px',
+    maxWidth: 1100,
+    margin: '0 auto',
   },
   emptyText: {
     color: '#6b7280',
     fontSize: 16,
+    fontWeight: 500,
   },
 };
 
-// Inject keyframe animation for spinner
+// Inject keyframe animations for spinner and fade-in
 if (typeof document !== 'undefined') {
   const styleSheet = document.createElement('style');
-  styleSheet.textContent = `@keyframes spin { to { transform: rotate(360deg); } }`;
+  styleSheet.textContent = `
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  `;
   document.head.appendChild(styleSheet);
 }
 

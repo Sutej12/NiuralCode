@@ -141,6 +141,7 @@ const CandidateOfferSign = () => {
   if (loading) {
     return (
       <div style={styles.loaderWrap}>
+        <style>{spinnerKeyframes}</style>
         <div style={styles.spinner} />
         <p style={styles.loaderText}>Loading offer letter...</p>
       </div>
@@ -165,13 +166,16 @@ const CandidateOfferSign = () => {
   if (alreadySigned) {
     return (
       <div style={styles.confirmWrap}>
-        <div style={styles.confirmCard}>
-          <div style={styles.checkmark}>&#10003;</div>
-          <h2 style={styles.confirmTitle}>Offer Already Signed</h2>
-          <p style={styles.confirmText}>
-            This offer has already been signed. If you have any questions, please contact the
-            hiring team.
-          </p>
+        <div style={styles.alreadySignedCard}>
+          <div style={styles.alreadySignedAccent} />
+          <div style={styles.alreadySignedContent}>
+            <div style={styles.alreadySignedIcon}>&#10003;</div>
+            <h2 style={styles.alreadySignedTitle}>Offer Already Signed</h2>
+            <p style={styles.confirmText}>
+              This offer has already been signed. If you have any questions, please contact the
+              hiring team.
+            </p>
+          </div>
         </div>
       </div>
     );
@@ -189,6 +193,7 @@ const CandidateOfferSign = () => {
 
   return (
     <div style={styles.page}>
+      <style>{spinnerKeyframes}</style>
       <h1 style={styles.heading}>Your Offer Letter</h1>
 
       {error && <div style={styles.errorBanner}>{error}</div>}
@@ -261,27 +266,37 @@ const CandidateOfferSign = () => {
   );
 };
 
+const FONT_FAMILY =
+  "'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+
+const spinnerKeyframes = `
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+`;
+
 const styles = {
   page: {
     maxWidth: 700,
     margin: '0 auto',
     padding: '40px 20px',
-    fontFamily:
-      "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+    fontFamily: FONT_FAMILY,
   },
   heading: {
     fontSize: 28,
-    fontWeight: 700,
+    fontWeight: 800,
     color: '#1a1a2e',
     margin: '0 0 24px',
+    letterSpacing: '-0.01em',
   },
   letterCard: {
     background: '#fff',
     border: '1px solid #e5e7eb',
-    borderRadius: 12,
-    padding: 28,
+    borderRadius: '1.75rem',
+    padding: 32,
     marginBottom: 32,
-    boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
   },
   letterBody: {
     fontSize: 14,
@@ -293,7 +308,7 @@ const styles = {
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: 600,
+    fontWeight: 700,
     color: '#1a1a2e',
     margin: '0 0 6px',
   },
@@ -303,10 +318,10 @@ const styles = {
     marginBottom: 12,
   },
   canvasWrap: {
-    border: '2px dashed #d1d5db',
-    borderRadius: 10,
+    border: '2px dashed #c4b5fd',
+    borderRadius: 16,
     padding: 4,
-    background: '#fafafa',
+    background: '#faf8ff',
     display: 'inline-block',
     maxWidth: '100%',
   },
@@ -322,58 +337,109 @@ const styles = {
     marginTop: 10,
   },
   btnOutline: {
-    padding: '8px 16px',
+    padding: '8px 20px',
     fontSize: 13,
-    fontWeight: 500,
-    color: '#4f46e5',
+    fontWeight: 600,
+    color: '#714DFF',
     background: '#fff',
-    border: '1px solid #4f46e5',
-    borderRadius: 8,
+    border: '1.5px solid #714DFF',
+    borderRadius: 9999,
     cursor: 'pointer',
+    fontFamily: FONT_FAMILY,
+    transition: 'background 0.15s, color 0.15s',
   },
   btnSign: {
     width: '100%',
-    padding: '14px 0',
+    padding: '16px 0',
     fontSize: 16,
-    fontWeight: 600,
+    fontWeight: 700,
     color: '#fff',
-    background: '#059669',
+    background: 'linear-gradient(135deg, #714DFF 0%, #E151FF 100%)',
     border: 'none',
-    borderRadius: 10,
+    borderRadius: 9999,
     cursor: 'pointer',
+    fontFamily: FONT_FAMILY,
+    letterSpacing: '0.01em',
+    transition: 'opacity 0.2s',
   },
   confirmWrap: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     minHeight: '60vh',
-    fontFamily:
-      "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+    fontFamily: FONT_FAMILY,
   },
   confirmCard: {
     textAlign: 'center',
-    background: '#f0fdf4',
-    border: '1px solid #bbf7d0',
-    borderRadius: 16,
-    padding: '40px 48px',
-    maxWidth: 440,
+    background: '#fff',
+    borderRadius: '1.75rem',
+    padding: '48px 48px',
+    maxWidth: 460,
+    boxShadow: '0 4px 24px rgba(113, 77, 255, 0.10)',
+    border: '1px solid #ede9fe',
   },
   checkmark: {
-    fontSize: 48,
-    color: '#059669',
-    marginBottom: 16,
+    width: 64,
+    height: 64,
+    borderRadius: '50%',
+    background: 'linear-gradient(135deg, #714DFF 0%, #E151FF 100%)',
+    color: '#fff',
+    fontSize: 32,
+    fontWeight: 700,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: '0 auto 20px',
+    lineHeight: 1,
   },
   confirmTitle: {
     fontSize: 24,
-    fontWeight: 700,
-    color: '#065f46',
+    fontWeight: 800,
+    color: '#1a1a2e',
     margin: '0 0 12px',
   },
   confirmText: {
     fontSize: 15,
-    color: '#374151',
+    color: '#4b5563',
     margin: 0,
     lineHeight: 1.6,
+  },
+  alreadySignedCard: {
+    background: '#fff',
+    borderRadius: '1.75rem',
+    maxWidth: 460,
+    boxShadow: '0 4px 24px rgba(113, 77, 255, 0.10)',
+    border: '1px solid #ede9fe',
+    overflow: 'hidden',
+  },
+  alreadySignedAccent: {
+    height: 6,
+    background: 'linear-gradient(135deg, #714DFF 0%, #E151FF 100%)',
+    width: '100%',
+  },
+  alreadySignedContent: {
+    textAlign: 'center',
+    padding: '40px 48px',
+  },
+  alreadySignedIcon: {
+    width: 56,
+    height: 56,
+    borderRadius: '50%',
+    background: '#f3f0ff',
+    color: '#714DFF',
+    fontSize: 28,
+    fontWeight: 700,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: '0 auto 16px',
+    lineHeight: 1,
+  },
+  alreadySignedTitle: {
+    fontSize: 22,
+    fontWeight: 800,
+    color: '#1a1a2e',
+    margin: '0 0 12px',
   },
   emptyWrap: {
     textAlign: 'center',
@@ -387,10 +453,11 @@ const styles = {
     background: '#fef2f2',
     color: '#dc2626',
     border: '1px solid #fecaca',
-    borderRadius: 8,
-    padding: '10px 16px',
+    borderRadius: 12,
+    padding: '12px 16px',
     marginBottom: 16,
     fontSize: 14,
+    fontWeight: 500,
   },
   loaderWrap: {
     display: 'flex',
@@ -398,12 +465,13 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     minHeight: '60vh',
+    fontFamily: FONT_FAMILY,
   },
   spinner: {
     width: 40,
     height: 40,
-    border: '4px solid #e5e7eb',
-    borderTop: '4px solid #4f46e5',
+    border: '4px solid #ede9fe',
+    borderTop: '4px solid #714DFF',
     borderRadius: '50%',
     animation: 'spin 0.8s linear infinite',
   },
@@ -411,6 +479,7 @@ const styles = {
     marginTop: 16,
     color: '#6b7280',
     fontSize: 15,
+    fontFamily: FONT_FAMILY,
   },
 };
 

@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import api from '../api';
 
 const STATUS_COLORS = {
-  Applied: '#6366f1',
-  Screened: '#8b5cf6',
+  Applied: '#714DFF',
+  Screened: '#9B7FFF',
   Shortlisted: '#3b82f6',
   'In Interview': '#06b6d4',
   Offer: '#f59e0b',
@@ -41,7 +41,7 @@ export default function AnalyticsDashboard() {
       <div style={S.page}>
         <div style={S.loadingWrap}>
           <div style={S.spinner} />
-          <p style={{ color: '#64748b', marginTop: 16 }}>Loading analytics...</p>
+          <p style={{ color: '#64748b', marginTop: 16, fontFamily: "'Inter Tight', sans-serif" }}>Loading analytics...</p>
         </div>
       </div>
     );
@@ -107,8 +107,8 @@ export default function AnalyticsDashboard() {
               {funnel.map((f, i) => (
                 <div key={f.stage}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-                    <span style={{ fontSize: 13, fontWeight: 500, color: '#334155' }}>{f.stage}</span>
-                    <span style={{ fontSize: 13, color: '#64748b' }}>
+                    <span style={{ fontSize: 13, fontWeight: 500, color: '#334155', fontFamily: "'Inter Tight', sans-serif" }}>{f.stage}</span>
+                    <span style={{ fontSize: 13, color: '#64748b', fontFamily: "'Inter Tight', sans-serif" }}>
                       {f.count}
                       {f.conversion !== null && (
                         <span style={{ marginLeft: 8, fontSize: 11, color: '#94a3b8' }}>
@@ -138,7 +138,7 @@ export default function AnalyticsDashboard() {
             <div style={{ display: 'flex', alignItems: 'flex-end', gap: 16, height: 180, paddingTop: 12 }}>
               {ai_score_distribution.map((b) => (
                 <div key={b.bucket} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100%', justifyContent: 'flex-end' }}>
-                  <span style={{ fontSize: 13, fontWeight: 600, color: '#334155', marginBottom: 6 }}>{b.count}</span>
+                  <span style={{ fontSize: 13, fontWeight: 600, color: '#334155', marginBottom: 6, fontFamily: "'Inter Tight', sans-serif" }}>{b.count}</span>
                   <div style={{
                     width: '100%',
                     maxWidth: 60,
@@ -146,9 +146,9 @@ export default function AnalyticsDashboard() {
                     minHeight: b.count > 0 ? 8 : 0,
                     background: SCORE_BUCKET_COLORS[b.bucket],
                     borderRadius: '6px 6px 0 0',
-                    transition: 'height 0.3s',
+                    transition: 'all 0.3s ease',
                   }} />
-                  <span style={{ fontSize: 11, color: '#64748b', marginTop: 6 }}>{b.bucket}</span>
+                  <span style={{ fontSize: 11, color: '#64748b', marginTop: 6, fontFamily: "'Inter Tight', sans-serif" }}>{b.bucket}</span>
                 </div>
               ))}
             </div>
@@ -164,14 +164,14 @@ export default function AnalyticsDashboard() {
               {per_role_stats.map((r) => (
                 <div key={r.job_id}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-                    <span style={{ fontSize: 13, fontWeight: 500, color: '#334155', maxWidth: '70%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.title}</span>
-                    <span style={{ fontSize: 13, color: '#64748b' }}>{r.total}</span>
+                    <span style={{ fontSize: 13, fontWeight: 500, color: '#334155', maxWidth: '70%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontFamily: "'Inter Tight', sans-serif" }}>{r.title}</span>
+                    <span style={{ fontSize: 13, color: '#64748b', fontFamily: "'Inter Tight', sans-serif" }}>{r.total}</span>
                   </div>
                   <div style={S.barTrack}>
                     <div style={{
                       ...S.barFill,
                       width: `${(r.total / maxRoleCandidates) * 100}%`,
-                      background: '#6366f1',
+                      background: '#714DFF',
                     }} />
                   </div>
                 </div>
@@ -189,8 +189,8 @@ export default function AnalyticsDashboard() {
               {stageEntries.map(([stage, days]) => (
                 <div key={stage}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-                    <span style={{ fontSize: 13, fontWeight: 500, color: '#334155' }}>{stage}</span>
-                    <span style={{ fontSize: 13, color: '#64748b' }}>{days} days</span>
+                    <span style={{ fontSize: 13, fontWeight: 500, color: '#334155', fontFamily: "'Inter Tight', sans-serif" }}>{stage}</span>
+                    <span style={{ fontSize: 13, color: '#64748b', fontFamily: "'Inter Tight', sans-serif" }}>{days} days</span>
                   </div>
                   <div style={S.barTrack}>
                     <div style={{
@@ -273,6 +273,7 @@ const S = {
     maxWidth: 1400,
     margin: '0 auto',
     padding: '32px 24px',
+    fontFamily: "'Inter Tight', sans-serif",
   },
   header: {
     marginBottom: 28,
@@ -282,11 +283,13 @@ const S = {
     fontWeight: 700,
     color: '#0f172a',
     margin: 0,
+    fontFamily: "'Inter Tight', sans-serif",
   },
   subtitle: {
     fontSize: 14,
     color: '#64748b',
     marginTop: 4,
+    fontFamily: "'Inter Tight', sans-serif",
   },
   grid: {
     display: 'grid',
@@ -295,21 +298,24 @@ const S = {
   },
   card: {
     background: '#fff',
-    borderRadius: 12,
+    borderRadius: '1.75rem',
     padding: 24,
     boxShadow: '0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04)',
-    border: '1px solid #e2e8f0',
+    border: '1px solid #e8e8e8',
+    transition: 'all 0.3s ease',
   },
   cardTitle: {
     fontSize: 16,
     fontWeight: 600,
     color: '#1e293b',
     margin: 0,
+    fontFamily: "'Inter Tight', sans-serif",
   },
   cardSubtitle: {
     fontSize: 12,
     color: '#94a3b8',
     margin: '4px 0 0',
+    fontFamily: "'Inter Tight', sans-serif",
   },
   kpiRow: {
     display: 'flex',
@@ -320,15 +326,17 @@ const S = {
     flex: '1 1 100px',
     minWidth: 90,
     background: '#f8fafc',
-    borderRadius: 8,
+    borderRadius: '1.75rem',
     padding: '16px 12px',
     textAlign: 'center',
+    transition: 'all 0.3s ease',
   },
   kpiCount: {
     fontSize: 28,
     fontWeight: 700,
     color: '#1e293b',
     lineHeight: 1,
+    fontFamily: "'Inter Tight', sans-serif",
   },
   kpiLabel: {
     fontSize: 11,
@@ -337,6 +345,7 @@ const S = {
     marginTop: 6,
     textTransform: 'uppercase',
     letterSpacing: '0.5px',
+    fontFamily: "'Inter Tight', sans-serif",
   },
   barTrack: {
     width: '100%',
@@ -348,28 +357,32 @@ const S = {
   barFill: {
     height: '100%',
     borderRadius: 4,
-    transition: 'width 0.4s ease',
+    transition: 'all 0.3s ease',
     minWidth: 0,
   },
   table: {
     width: '100%',
     borderCollapse: 'collapse',
     fontSize: 13,
+    fontFamily: "'Inter Tight', sans-serif",
   },
   th: {
     textAlign: 'left',
-    padding: '10px 12px',
-    borderBottom: '2px solid #e2e8f0',
-    color: '#64748b',
-    fontWeight: 600,
+    padding: '12px 14px',
+    background: '#f8f7ff',
+    borderBottom: '2px solid #e8e8e8',
+    color: '#1e293b',
+    fontWeight: 700,
     fontSize: 12,
     textTransform: 'uppercase',
     letterSpacing: '0.5px',
+    fontFamily: "'Inter Tight', sans-serif",
   },
   td: {
     padding: '10px 12px',
     borderBottom: '1px solid #f1f5f9',
     color: '#334155',
+    fontFamily: "'Inter Tight', sans-serif",
   },
   badge: {
     display: 'inline-block',
@@ -377,12 +390,14 @@ const S = {
     borderRadius: 9999,
     fontSize: 11,
     fontWeight: 600,
+    fontFamily: "'Inter Tight', sans-serif",
   },
   emptyState: {
     textAlign: 'center',
     color: '#94a3b8',
     padding: '32px 0',
     fontSize: 14,
+    fontFamily: "'Inter Tight', sans-serif",
   },
   loadingWrap: {
     display: 'flex',
@@ -394,8 +409,8 @@ const S = {
   spinner: {
     width: 36,
     height: 36,
-    border: '3px solid #e2e8f0',
-    borderTop: '3px solid #6366f1',
+    border: '3px solid #e8e8e8',
+    borderTop: '3px solid #714DFF',
     borderRadius: '50%',
     animation: 'spin 0.8s linear infinite',
   },

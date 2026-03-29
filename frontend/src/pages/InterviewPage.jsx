@@ -357,8 +357,8 @@ const InterviewPage = () => {
           <span style={styles.infoLabel}>Status</span>
           <span style={{
             ...styles.infoBadge,
-            background: interview.status === 'completed' ? '#d1fae5' : '#eef2ff',
-            color: interview.status === 'completed' ? '#065f46' : '#4f46e5',
+            background: interview.status === 'completed' ? '#d1fae5' : '#f0ecff',
+            color: interview.status === 'completed' ? '#065f46' : PRIMARY,
           }}>{interview.status}</span>
         </div>
         {candidate?.job_title && (
@@ -369,8 +369,8 @@ const InterviewPage = () => {
         )}
       </div>
 
-      {/* Mock Interview Room */}
-      <div style={styles.roomCard}>
+      {/* Mock Interview Room — hidden for Hired/Onboarded (read-only records) */}
+      {!['Hired', 'Onboarded'].includes(candidate?.status) && <div style={styles.roomCard}>
         <div style={styles.roomHeader}>
           <h2 style={styles.roomTitle}>🎙️ Interview Room</h2>
           <div style={styles.roomStatus}>
@@ -455,7 +455,7 @@ const InterviewPage = () => {
             disabled={savingTranscript || !liveTranscript.trim()}
             style={{
               ...styles.controlBtn,
-              background: '#4f46e5',
+              background: PRIMARY,
               opacity: (!liveTranscript.trim() || savingTranscript) ? 0.4 : 1,
             }}
             title="Save Local Transcript"
@@ -490,7 +490,7 @@ const InterviewPage = () => {
                 onClick={() => setSpeakerLabel(label)}
                 style={{
                   ...styles.speakerBtn,
-                  background: speakerLabel === label ? (label === 'Interviewer' ? '#4f46e5' : '#059669') : '#f3f4f6',
+                  background: speakerLabel === label ? (label === 'Interviewer' ? '#714DFF' : '#059669') : '#f3f4f6',
                   color: speakerLabel === label ? '#fff' : '#374151',
                   border: speakerLabel === label ? 'none' : '1px solid #374151',
                 }}
@@ -498,10 +498,6 @@ const InterviewPage = () => {
                 {label === 'Interviewer' ? '👤' : '🎓'} {label}
               </button>
             ))}
-          </div>
-          <div style={{ fontSize: 11, color: '#6b7280', marginTop: 6 }}>
-            Toggle to "Candidate" when the candidate is speaking, then switch back to "Interviewer" for your turns.
-            {' '}If the candidate is on a separate device, their speech is auto-labeled.
           </div>
         </div>
 
@@ -543,7 +539,7 @@ const InterviewPage = () => {
         <button onClick={handleFetchMockTranscript} style={styles.mockBtn}>
           📋 Load Mock Transcript (for testing)
         </button>
-      </div>
+      </div>}
 
       {/* Saved Transcript */}
       {interview.transcript && (
@@ -615,7 +611,7 @@ const InterviewPage = () => {
               </div>
             )}
             {feedback.recommendation && (
-              <div style={{ ...styles.feedbackCard, borderLeft: '4px solid #4f46e5' }}>
+              <div style={{ ...styles.feedbackCard, borderLeft: `4px solid ${PRIMARY}` }}>
                 <h4 style={styles.feedbackLabel}>📊 Recommendation</h4>
                 <p style={styles.feedbackText}>{feedback.recommendation}</p>
               </div>
@@ -644,40 +640,46 @@ function formatTime(seconds) {
   return `${m}:${s}`;
 }
 
+const FONT = "'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif";
+const PRIMARY = '#714DFF';
+const GRADIENT = 'linear-gradient(135deg, #714DFF 0%, #E151FF 100%)';
+
 const styles = {
   page: {
     maxWidth: 900,
     margin: '0 auto',
     padding: '24px 20px',
-    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+    fontFamily: FONT,
   },
   backBtn: {
-    background: 'none', border: 'none', color: '#4f46e5',
-    cursor: 'pointer', fontSize: 14, padding: 0, fontWeight: 500, marginBottom: 16,
+    background: 'none', border: 'none', color: PRIMARY,
+    cursor: 'pointer', fontSize: 14, padding: 0, fontWeight: 600, marginBottom: 16,
+    fontFamily: FONT, transition: 'opacity 0.2s',
   },
-  heading: { fontSize: 26, fontWeight: 700, color: '#1a1a2e', margin: '0 0 20px' },
+  heading: { fontSize: 26, fontWeight: 700, color: '#1a1a2e', margin: '0 0 20px', fontFamily: FONT },
   infoCard: {
-    background: '#f9fafb', border: '1px solid #e5e7eb',
-    borderRadius: 12, padding: 20, marginBottom: 24,
+    background: '#f9fafb', border: '1px solid #e8e8e8',
+    borderRadius: '1.75rem', padding: 20, marginBottom: 24,
+    transition: 'all 0.3s ease',
   },
   infoRow: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 0' },
-  infoLabel: { fontSize: 14, fontWeight: 500, color: '#6b7280' },
-  infoValue: { fontSize: 14, color: '#374151', fontWeight: 500 },
+  infoLabel: { fontSize: 14, fontWeight: 500, color: '#6b7280', fontFamily: FONT },
+  infoValue: { fontSize: 14, color: '#374151', fontWeight: 500, fontFamily: FONT },
   infoBadge: {
-    fontSize: 13, fontWeight: 600, borderRadius: 6, padding: '3px 10px',
-    textTransform: 'capitalize',
+    fontSize: 13, fontWeight: 600, borderRadius: 9999, padding: '3px 12px',
+    textTransform: 'capitalize', fontFamily: FONT,
   },
 
   // Interview Room
   roomCard: {
-    background: '#1a1a2e', border: '2px solid #374151', borderRadius: 16,
+    background: '#1a1a2e', border: '2px solid #374151', borderRadius: '1.75rem',
     padding: 24, marginBottom: 28, boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
   },
   roomHeader: {
     display: 'flex', justifyContent: 'space-between', alignItems: 'center',
     marginBottom: 16,
   },
-  roomTitle: { fontSize: 20, fontWeight: 700, color: '#fff', margin: 0 },
+  roomTitle: { fontSize: 20, fontWeight: 700, color: '#fff', margin: 0, fontFamily: FONT },
   roomStatus: { display: 'flex', alignItems: 'center', gap: 8 },
   recordingDot: {
     width: 10, height: 10, borderRadius: '50%', background: '#dc2626',
@@ -694,7 +696,7 @@ const styles = {
     marginBottom: 12, minHeight: 320,
   },
   videoMain: {
-    position: 'relative', borderRadius: 12, overflow: 'hidden',
+    position: 'relative', borderRadius: 16, overflow: 'hidden',
     background: '#0f0f1a', border: '1px solid #374151',
   },
   videoElement: {
@@ -724,7 +726,7 @@ const styles = {
     animation: 'pulse 1.5s ease-in-out infinite',
   },
   videoSecondary: {
-    position: 'relative', borderRadius: 12, overflow: 'hidden',
+    position: 'relative', borderRadius: 16, overflow: 'hidden',
     background: '#0f0f1a', border: '1px solid #374151',
   },
   videoPlaceholderSmall: {
@@ -765,7 +767,7 @@ const styles = {
     cursor: 'pointer', fontSize: 13, fontWeight: 500, transition: 'all 0.15s',
   },
   liveTranscriptBox: {
-    background: '#0f0f1a', borderRadius: 12, padding: 20,
+    background: '#0f0f1a', borderRadius: 16, padding: 20,
     minHeight: 160, maxHeight: 280, overflow: 'auto', marginBottom: 12,
     border: '1px solid #374151',
   },
@@ -792,7 +794,7 @@ const styles = {
   },
   saveBtn: {
     padding: '10px 20px', fontSize: 14, fontWeight: 600, color: '#fff',
-    background: '#4f46e5', border: 'none', borderRadius: 8, cursor: 'pointer',
+    background: PRIMARY, border: 'none', borderRadius: 8, cursor: 'pointer',
   },
   clearBtn: {
     padding: '10px 20px', fontSize: 14, fontWeight: 500, color: '#9ca3af',
@@ -811,7 +813,7 @@ const styles = {
 
   // Transcript & Analysis
   section: { marginBottom: 28 },
-  sectionTitle: { fontSize: 18, fontWeight: 600, color: '#1a1a2e', margin: 0 },
+  sectionTitle: { fontSize: 18, fontWeight: 600, color: '#1a1a2e', margin: 0, fontFamily: FONT },
   analyzeRow: {
     display: 'flex', justifyContent: 'space-between', alignItems: 'center',
     marginBottom: 16,
@@ -819,45 +821,50 @@ const styles = {
   hintText: { color: '#9ca3af', fontSize: 14, fontStyle: 'italic' },
   collapseToggle: {
     background: 'none', border: 'none', fontSize: 15, fontWeight: 500,
-    color: '#4f46e5', cursor: 'pointer', padding: 0, marginBottom: 8,
+    color: PRIMARY, cursor: 'pointer', padding: 0, marginBottom: 8,
+    fontFamily: FONT,
   },
   chevron: { fontSize: 12 },
   transcriptBox: {
-    background: '#f9fafb', border: '1px solid #e5e7eb',
-    borderRadius: 8, padding: 16, maxHeight: 400, overflow: 'auto',
+    background: '#f9fafb', border: '1px solid #e8e8e8',
+    borderRadius: '1.75rem', padding: 16, maxHeight: 400, overflow: 'auto',
   },
   transcriptText: {
     fontSize: 13, color: '#374151', whiteSpace: 'pre-wrap',
     fontFamily: 'monospace', margin: 0, lineHeight: 1.6,
   },
   summaryBox: {
-    background: '#eef2ff', border: '1px solid #c7d2fe',
-    borderRadius: 10, padding: 16, marginBottom: 14,
+    background: '#f0ecff', border: '1px solid #ddd6fe',
+    borderRadius: '1.75rem', padding: 16, marginBottom: 14,
   },
-  summaryText: { fontSize: 14, color: '#374151', margin: '8px 0 0', lineHeight: 1.6 },
+  summaryText: { fontSize: 14, color: '#374151', margin: '8px 0 0', lineHeight: 1.6, fontFamily: FONT },
   feedbackGrid: { display: 'flex', flexDirection: 'column', gap: 14 },
   feedbackCard: {
-    background: '#fff', border: '1px solid #e5e7eb', borderRadius: 10, padding: '16px 20px',
+    background: '#fff', border: '1px solid #e8e8e8', borderRadius: '1.75rem', padding: '16px 20px',
+    transition: 'all 0.3s ease',
   },
-  feedbackLabel: { fontSize: 15, fontWeight: 600, color: '#1a1a2e', margin: '0 0 8px' },
+  feedbackLabel: { fontSize: 15, fontWeight: 600, color: '#1a1a2e', margin: '0 0 8px', fontFamily: FONT },
   feedbackList: { margin: 0, paddingLeft: 20 },
   feedbackItem: { fontSize: 14, color: '#374151', marginBottom: 4, lineHeight: 1.5 },
   feedbackText: { fontSize: 14, color: '#374151', margin: 0, lineHeight: 1.5 },
   emptyWrap: { textAlign: 'center', padding: '60px 0' },
   emptyIcon: { fontSize: 48, marginBottom: 12 },
-  emptyText: { color: '#6b7280', fontSize: 15, marginBottom: 20 },
+  emptyText: { color: '#6b7280', fontSize: 15, marginBottom: 20, fontFamily: FONT },
   btnPrimary: {
     padding: '10px 24px', fontSize: 14, fontWeight: 600, color: '#fff',
-    background: '#4f46e5', border: 'none', borderRadius: 8, cursor: 'pointer',
+    background: GRADIENT, border: 'none', borderRadius: 9999, cursor: 'pointer',
+    fontFamily: FONT, transition: 'all 0.3s ease',
   },
   errorBanner: {
     background: '#fef2f2', color: '#dc2626', border: '1px solid #fecaca',
-    borderRadius: 8, padding: '10px 16px', marginBottom: 16, fontSize: 14,
+    borderRadius: '1.75rem', padding: '10px 16px', marginBottom: 16, fontSize: 14,
+    fontFamily: FONT,
   },
   successBanner: {
     background: '#f0fdf4', color: '#166534', border: '1px solid #bbf7d0',
-    borderRadius: 8, padding: '10px 16px', marginBottom: 16, fontSize: 14,
+    borderRadius: '1.75rem', padding: '10px 16px', marginBottom: 16, fontSize: 14,
     display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+    fontFamily: FONT,
   },
   dismissBtn: {
     background: 'none', border: 'none', color: '#166534', cursor: 'pointer',
@@ -868,11 +875,11 @@ const styles = {
     justifyContent: 'center', minHeight: '60vh',
   },
   spinner: {
-    width: 40, height: 40, border: '4px solid #e5e7eb',
-    borderTop: '4px solid #4f46e5', borderRadius: '50%',
+    width: 40, height: 40, border: '4px solid #ede9fe',
+    borderTop: `4px solid ${PRIMARY}`, borderRadius: '50%',
     animation: 'spin 0.8s linear infinite',
   },
-  loaderText: { marginTop: 16, color: '#6b7280', fontSize: 15 },
+  loaderText: { marginTop: 16, color: '#6b7280', fontSize: 15, fontFamily: FONT },
 };
 
 // Add CSS animations

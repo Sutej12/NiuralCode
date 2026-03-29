@@ -3,14 +3,14 @@ import { useParams, Link } from 'react-router-dom';
 import api from '../api';
 
 const STATUS_CONFIG = {
-  Applied: { color: '#4f46e5', bg: '#eef2ff', icon: '📄', label: 'Application Submitted' },
-  Screened: { color: '#1e40af', bg: '#dbeafe', icon: '🔍', label: 'Resume Screened' },
-  Shortlisted: { color: '#854d0e', bg: '#fef9c3', icon: '⭐', label: 'Shortlisted' },
-  'In Interview': { color: '#9d174d', bg: '#fce7f3', icon: '🎙️', label: 'Interview Stage' },
-  Offer: { color: '#065f46', bg: '#d1fae5', icon: '📋', label: 'Offer Extended' },
-  Hired: { color: '#166534', bg: '#bbf7d0', icon: '🎉', label: 'Hired' },
-  Onboarded: { color: '#064e3b', bg: '#a7f3d0', icon: '🚀', label: 'Onboarded' },
-  Rejected: { color: '#991b1b', bg: '#fee2e2', icon: '📭', label: 'Not Selected' },
+  Applied: { color: '#714DFF', bg: '#f0ecff', icon: '\u{1F4C4}', label: 'Application Submitted' },
+  Screened: { color: '#4338ca', bg: '#e0e7ff', icon: '\u{1F50D}', label: 'Resume Screened' },
+  Shortlisted: { color: '#b45309', bg: '#fef9c3', icon: '\u2B50', label: 'Shortlisted' },
+  'In Interview': { color: '#be185d', bg: '#fce7f3', icon: '\u{1F399}\uFE0F', label: 'Interview Stage' },
+  Offer: { color: '#065f46', bg: '#d1fae5', icon: '\u{1F4CB}', label: 'Offer Extended' },
+  Hired: { color: '#166534', bg: '#bbf7d0', icon: '\u{1F389}', label: 'Hired' },
+  Onboarded: { color: '#064e3b', bg: '#a7f3d0', icon: '\u{1F680}', label: 'Onboarded' },
+  Rejected: { color: '#991b1b', bg: '#fee2e2', icon: '\u{1F4ED}', label: 'Not Selected' },
 };
 
 const ALL_STAGES = ['Applied', 'Screened', 'Shortlisted', 'In Interview', 'Offer', 'Hired'];
@@ -141,7 +141,7 @@ export default function CandidatePortal() {
     return (
       <div style={S.centerWrap}>
         <div style={S.errorCard}>
-          <div style={{ fontSize: 48, marginBottom: 16 }}>🔒</div>
+          <div style={{ fontSize: 48, marginBottom: 16 }}>{'🔒'}</div>
           <h2 style={{ color: '#991b1b', margin: '0 0 8px' }}>{error}</h2>
           <p style={{ color: '#6b7280', fontSize: 14 }}>If you believe this is a mistake, please contact the hiring team.</p>
           <Link to="/" style={S.homeLink}>Browse Open Positions</Link>
@@ -194,15 +194,15 @@ export default function CandidatePortal() {
                     <div style={S.pipelineStep}>
                       <div style={{
                         ...S.pipelineCircle,
-                        background: isCompleted ? '#059669' : isCurrent ? conf.color : '#e5e7eb',
+                        background: isCompleted ? '#059669' : isCurrent ? 'linear-gradient(135deg, #714DFF 0%, #E151FF 100%)' : '#e5e7eb',
                         color: (isCompleted || isCurrent) ? '#fff' : '#9ca3af',
-                        boxShadow: isCurrent ? `0 0 0 4px ${conf.bg}` : 'none',
+                        boxShadow: isCurrent ? '0 0 0 4px rgba(113, 77, 255, 0.18)' : 'none',
                       }}>
                         {isCompleted ? '\u2713' : conf.icon}
                       </div>
                       <span style={{
                         ...S.pipelineLabel,
-                        color: isCompleted ? '#059669' : isCurrent ? conf.color : '#9ca3af',
+                        color: isCompleted ? '#059669' : isCurrent ? '#714DFF' : '#9ca3af',
                         fontWeight: isCurrent ? 700 : 500,
                       }}>{stage}</span>
                     </div>
@@ -224,8 +224,8 @@ export default function CandidatePortal() {
 
         {/* ============ SCHEDULING SECTION ============ */}
         {showScheduling && (
-          <div style={{ ...S.card, border: '2px solid #c7d2fe' }}>
-            <h2 style={S.cardTitle}>📅 Interview Scheduling</h2>
+          <div style={{ ...S.card, border: '2px solid rgba(113, 77, 255, 0.2)' }}>
+            <h2 style={S.cardTitle}>{'📅'} Interview Scheduling</h2>
 
             {schedError && <div style={S.errorBanner}>{schedError}</div>}
             {schedMsg && <div style={S.successBanner}>{schedMsg}</div>}
@@ -233,7 +233,7 @@ export default function CandidatePortal() {
             {/* Already confirmed */}
             {isConfirmedSlot && confirmedSlot && (
               <div style={S.confirmedBox}>
-                <div style={{ fontSize: 32, marginBottom: 8 }}>✅</div>
+                <div style={{ fontSize: 32, marginBottom: 8 }}>{'✅'}</div>
                 <h3 style={{ margin: '0 0 12px', color: '#065f46', fontSize: 18 }}>Interview Confirmed!</h3>
                 <div style={S.confirmedDetails}>
                   <div style={S.detailRowInline}>
@@ -248,7 +248,7 @@ export default function CandidatePortal() {
                     <div style={S.detailRowInline}>
                       <span style={S.dlabel}>Meeting</span>
                       <a href={confirmedSlot.meet_link} target="_blank" rel="noopener noreferrer"
-                        style={{ color: '#4f46e5', fontWeight: 600, fontSize: 14, textDecoration: 'none' }}>
+                        style={{ color: '#714DFF', fontWeight: 600, fontSize: 14, textDecoration: 'none' }}>
                         Join Google Meet
                       </a>
                     </div>
@@ -267,7 +267,7 @@ export default function CandidatePortal() {
                   {sched.slots.map((slot) => (
                     <div key={slot.id} style={{
                       ...S.slotCard,
-                      ...(selecting === slot.id ? { borderColor: '#4f46e5', boxShadow: '0 0 0 2px rgba(79,70,229,0.2)' } : {}),
+                      ...(selecting === slot.id ? { borderColor: '#714DFF', boxShadow: '0 0 0 2px rgba(113,77,255,0.2)' } : {}),
                     }}>
                       <div style={S.slotDate}>{fmtSlotDate(slot.start_time)}</div>
                       <div style={S.slotTime}>{fmtSlotTime(slot.start_time)} – {fmtSlotTime(slot.end_time)}</div>
@@ -314,7 +314,7 @@ export default function CandidatePortal() {
                     <div style={{ marginBottom: 12 }}>
                       <label style={S.formLabel}>Additional Notes</label>
                       <textarea value={requestNote} onChange={(e) => setRequestNote(e.target.value)}
-                        placeholder="E.g., I'm available Monday–Wednesday afternoons..." rows={3}
+                        placeholder="E.g., I'm available Monday\u2013Wednesday afternoons..." rows={3}
                         style={{ ...S.formInput, resize: 'vertical' }} />
                     </div>
                     <div style={{ display: 'flex', gap: 10 }}>
@@ -331,8 +331,8 @@ export default function CandidatePortal() {
             {/* Request sent confirmation */}
             {requestSent && !isConfirmedSlot && (
               <div style={{ textAlign: 'center', padding: 20 }}>
-                <div style={{ fontSize: 36, marginBottom: 8 }}>📩</div>
-                <h3 style={{ color: '#1e40af', margin: '0 0 8px' }}>Request Submitted!</h3>
+                <div style={{ fontSize: 36, marginBottom: 8 }}>{'📩'}</div>
+                <h3 style={{ color: '#714DFF', margin: '0 0 8px' }}>Request Submitted!</h3>
                 <p style={{ color: '#6b7280', fontSize: 14, margin: 0 }}>
                   The interviewer will review your preferences and you'll receive new available slots shortly.
                 </p>
@@ -343,10 +343,10 @@ export default function CandidatePortal() {
 
         {/* ============ INTERVIEW NOTE ============ */}
         {showInterviewNote && (
-          <div style={{ ...S.card, border: '2px solid #c7d2fe' }}>
-            <h2 style={S.cardTitle}>🎙️ Interview</h2>
+          <div style={{ ...S.card, border: '2px solid rgba(113, 77, 255, 0.2)' }}>
+            <h2 style={S.cardTitle}>{'🎙️'} Interview</h2>
             <div style={{ textAlign: 'center', padding: '20px 0' }}>
-              <div style={{ fontSize: 48, marginBottom: 12 }}>📧</div>
+              <div style={{ fontSize: 48, marginBottom: 12 }}>{'📧'}</div>
               <p style={{ color: '#374151', fontSize: 15, margin: '0 0 8px', fontWeight: 600 }}>
                 Interview details have been sent to your email
               </p>
@@ -356,7 +356,7 @@ export default function CandidatePortal() {
               </p>
               {interview?.meeting_link && (
                 <a href={interview.meeting_link} target="_blank" rel="noopener noreferrer"
-                  style={{ display: 'inline-block', padding: '10px 24px', background: '#4f46e5', color: '#fff', borderRadius: 8, textDecoration: 'none', fontWeight: 600, fontSize: 14 }}>
+                  style={{ display: 'inline-block', padding: '10px 24px', background: 'linear-gradient(135deg, #714DFF 0%, #E151FF 100%)', color: '#fff', borderRadius: 9999, textDecoration: 'none', fontWeight: 600, fontSize: 14 }}>
                   Join Meeting
                 </a>
               )}
@@ -390,13 +390,13 @@ export default function CandidatePortal() {
                       <div style={S.timelineDotCol}>
                         <div style={{
                           ...S.timelineDot,
-                          background: isLast ? conf.color : '#d1d5db',
-                          boxShadow: isLast ? `0 0 0 3px ${conf.bg}` : 'none',
+                          background: isLast ? '#714DFF' : '#d1d5db',
+                          boxShadow: isLast ? '0 0 0 3px rgba(113, 77, 255, 0.18)' : 'none',
                         }} />
                         {idx < timeline.length - 1 && <div style={S.timelineLine} />}
                       </div>
                       <div style={S.timelineContent}>
-                        <div style={{ fontWeight: isLast ? 700 : 500, fontSize: 14, color: isLast ? conf.color : '#374151' }}>
+                        <div style={{ fontWeight: isLast ? 700 : 500, fontSize: 14, color: isLast ? '#714DFF' : '#374151' }}>
                           {conf.label || entry.status}
                         </div>
                         <div style={S.timelineDate}>{fmtDateTime(entry.date)}</div>
@@ -413,7 +413,7 @@ export default function CandidatePortal() {
 
         {/* Help */}
         <div style={S.helpCard}>
-          <span style={{ fontSize: 24 }}>💬</span>
+          <span style={{ fontSize: 24 }}>{'💬'}</span>
           <div>
             <p style={{ margin: 0, fontWeight: 600, color: '#374151', fontSize: 14 }}>Have questions about your application?</p>
             <p style={{ margin: '4px 0 0', color: '#6b7280', fontSize: 13 }}>Reply to any email you've received from us, and our hiring team will get back to you.</p>
@@ -428,59 +428,59 @@ function DetailRow({ label, value }) {
   return (
     <div style={S.detailRow}>
       <span style={S.detailLabel}>{label}</span>
-      <span style={S.detailValue}>{value || '—'}</span>
+      <span style={S.detailValue}>{value || '\u2014'}</span>
     </div>
   );
 }
 
 const S = {
-  page: { minHeight: '80vh', fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" },
+  page: { minHeight: '80vh', fontFamily: "'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" },
   centerWrap: { display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', padding: 20 },
-  spinner: { width: 44, height: 44, border: '4px solid #e5e7eb', borderTop: '4px solid #4f46e5', borderRadius: '50%', animation: 'spin 0.8s linear infinite' },
+  spinner: { width: 44, height: 44, border: '4px solid #e5e7eb', borderTop: '4px solid #714DFF', borderRadius: '50%', animation: 'spin 0.8s linear infinite' },
   loadingText: { marginTop: 16, color: '#6b7280', fontSize: 15 },
-  errorCard: { textAlign: 'center', padding: 40, background: '#fff', borderRadius: 16, border: '1px solid #fecaca', maxWidth: 440 },
-  homeLink: { display: 'inline-block', marginTop: 16, padding: '10px 24px', background: '#4f46e5', color: '#fff', borderRadius: 8, textDecoration: 'none', fontWeight: 600, fontSize: 14 },
+  errorCard: { textAlign: 'center', padding: 40, background: '#fff', borderRadius: '1.75rem', border: '1px solid #fecaca', maxWidth: 440, boxShadow: '0 1px 3px rgba(0,0,0,0.06)' },
+  homeLink: { display: 'inline-block', marginTop: 16, padding: '10px 24px', background: 'linear-gradient(135deg, #714DFF 0%, #E151FF 100%)', color: '#fff', borderRadius: 9999, textDecoration: 'none', fontWeight: 600, fontSize: 14 },
 
-  hero: { background: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4f46e5 100%)', padding: '48px 24px 40px', marginBottom: 0 },
+  hero: { background: 'linear-gradient(135deg, #714DFF 0%, #E151FF 100%)', padding: '48px 24px 40px', marginBottom: 0 },
   heroInner: { maxWidth: 700, margin: '0 auto', textAlign: 'center' },
   heroIcon: { fontSize: 48, marginBottom: 12 },
   heroTitle: { fontSize: 28, fontWeight: 800, color: '#fff', margin: '0 0 8px' },
-  heroSubtitle: { fontSize: 16, color: '#c7d2fe', margin: '0 0 20px', lineHeight: 1.5 },
+  heroSubtitle: { fontSize: 16, color: 'rgba(255,255,255,0.85)', margin: '0 0 20px', lineHeight: 1.5 },
   statusBadge: { display: 'inline-block', padding: '8px 20px', borderRadius: 9999, fontSize: 14, fontWeight: 700 },
 
   content: { maxWidth: 800, margin: '0 auto', padding: '28px 20px 60px' },
-  card: { background: '#fff', borderRadius: 12, border: '1px solid #e5e7eb', padding: 24, marginBottom: 20, boxShadow: '0 1px 3px rgba(0,0,0,0.04)' },
+  card: { background: '#fff', borderRadius: '1.75rem', border: '1px solid #e5e7eb', padding: 24, marginBottom: 20, boxShadow: '0 1px 3px rgba(0,0,0,0.06)' },
   cardTitle: { fontSize: 16, fontWeight: 700, color: '#1a1a2e', margin: '0 0 16px', textTransform: 'uppercase', letterSpacing: '0.03em' },
 
   pipeline: { display: 'flex', alignItems: 'flex-start', justifyContent: 'center', gap: 0, flexWrap: 'wrap', padding: '8px 0' },
   pipelineStep: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, minWidth: 80 },
   pipelineCircle: { width: 40, height: 40, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 700, transition: 'all 0.3s' },
   pipelineLabel: { fontSize: 11, textAlign: 'center', maxWidth: 80 },
-  pipelineConnector: { width: 40, height: 3, borderRadius: 2, marginTop: 18, flexShrink: 0 },
+  pipelineConnector: { width: 40, height: 4, borderRadius: 4, marginTop: 18, flexShrink: 0 },
 
   nextStepText: { fontSize: 15, color: '#374151', lineHeight: 1.7, margin: 0 },
 
   // Scheduling
   slotGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 12 },
-  slotCard: { background: '#f9fafb', border: '2px solid #e5e7eb', borderRadius: 12, padding: 20, textAlign: 'center', transition: 'all 0.2s' },
+  slotCard: { background: '#fff', border: '1px solid #e5e7eb', borderRadius: '1.75rem', padding: 20, textAlign: 'center', transition: 'all 0.2s', cursor: 'pointer' },
   slotDate: { fontSize: 14, fontWeight: 600, color: '#374151', marginBottom: 4 },
-  slotTime: { fontSize: 18, fontWeight: 700, color: '#4f46e5', marginBottom: 4 },
+  slotTime: { fontSize: 18, fontWeight: 700, color: '#714DFF', marginBottom: 4 },
   slotDuration: { fontSize: 12, color: '#9ca3af', marginBottom: 14 },
-  selectBtn: { width: '100%', padding: '10px 0', fontSize: 14, fontWeight: 600, color: '#fff', background: '#4f46e5', border: 'none', borderRadius: 8, cursor: 'pointer' },
+  selectBtn: { width: '100%', padding: '10px 0', fontSize: 14, fontWeight: 600, color: '#fff', background: 'linear-gradient(135deg, #714DFF 0%, #E151FF 100%)', border: 'none', borderRadius: 9999, cursor: 'pointer' },
   confirmedBox: { textAlign: 'center', padding: '16px 0' },
-  confirmedDetails: { background: '#f0fdf4', borderRadius: 8, padding: 16, display: 'inline-block', minWidth: 300, border: '1px solid #bbf7d0' },
+  confirmedDetails: { background: '#f0fdf4', borderRadius: '1.75rem', padding: 16, display: 'inline-block', minWidth: 300, border: '2px solid transparent', backgroundClip: 'padding-box', boxShadow: '0 0 0 2px rgba(113, 77, 255, 0.15)' },
   detailRowInline: { display: 'flex', justifyContent: 'space-between', padding: '6px 0', gap: 24 },
   dlabel: { fontSize: 13, color: '#6b7280', fontWeight: 500 },
   dvalue: { fontSize: 14, color: '#1a1a2e', fontWeight: 600 },
   divider: { display: 'flex', alignItems: 'center', gap: 12, margin: '24px 0' },
   dividerLine: { flex: 1, height: 1, background: '#e5e7eb' },
   dividerText: { fontSize: 13, color: '#9ca3af' },
-  requestBtn: { padding: '10px 20px', fontSize: 14, fontWeight: 500, color: '#4f46e5', background: '#eef2ff', border: '1px solid #c7d2fe', borderRadius: 8, cursor: 'pointer' },
-  requestForm: { background: '#f9fafb', border: '1px solid #e5e7eb', borderRadius: 12, padding: 20 },
+  requestBtn: { padding: '10px 20px', fontSize: 14, fontWeight: 500, color: '#714DFF', background: '#f0ecff', border: '1px solid rgba(113, 77, 255, 0.2)', borderRadius: 9999, cursor: 'pointer' },
+  requestForm: { background: '#fafafa', border: '1px solid #e5e7eb', borderRadius: '1.75rem', padding: 20 },
   formLabel: { display: 'block', fontSize: 12, fontWeight: 600, color: '#374151', marginBottom: 4 },
-  formInput: { width: '100%', padding: '8px 12px', fontSize: 14, border: '1px solid #d1d5db', borderRadius: 8, boxSizing: 'border-box' },
-  errorBanner: { background: '#fef2f2', color: '#dc2626', border: '1px solid #fecaca', borderRadius: 8, padding: '10px 16px', marginBottom: 12, fontSize: 14 },
-  successBanner: { background: '#f0fdf4', color: '#166534', border: '1px solid #bbf7d0', borderRadius: 8, padding: '10px 16px', marginBottom: 12, fontSize: 14 },
+  formInput: { width: '100%', padding: '8px 12px', fontSize: 14, border: '1px solid #d1d5db', borderRadius: 12, boxSizing: 'border-box' },
+  errorBanner: { background: '#fef2f2', color: '#dc2626', border: '1px solid #fecaca', borderRadius: 12, padding: '10px 16px', marginBottom: 12, fontSize: 14 },
+  successBanner: { background: '#f0fdf4', color: '#166534', border: '1px solid #bbf7d0', borderRadius: 12, padding: '10px 16px', marginBottom: 12, fontSize: 14 },
 
   // Details & Timeline
   twoCol: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 },
@@ -496,5 +496,5 @@ const S = {
   timelineContent: { paddingBottom: 12 },
   timelineDate: { fontSize: 12, color: '#9ca3af', marginTop: 2 },
 
-  helpCard: { display: 'flex', alignItems: 'center', gap: 16, background: '#f9fafb', border: '1px solid #e5e7eb', borderRadius: 12, padding: '16px 20px' },
+  helpCard: { display: 'flex', alignItems: 'center', gap: 16, background: 'linear-gradient(135deg, rgba(113, 77, 255, 0.06) 0%, rgba(225, 81, 255, 0.06) 100%)', border: '1px solid rgba(113, 77, 255, 0.12)', borderRadius: '1.75rem', padding: '16px 20px' },
 };
