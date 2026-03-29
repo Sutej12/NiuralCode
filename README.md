@@ -60,7 +60,7 @@ Candidate Portal                  /api/candidates/apply/     ---> Gmail (confirm
 Admin Dashboard                   /api/candidates/                Gmail (scheduling emails)
   - Candidate Management            screen-candidate/             OpenAI (slot ranking)
   - Screening and Research           research-candidate/
-  - Scheduling                    /api/interviews/           ---> Fireflies.ai (transcripts)
+  - Scheduling                    /api/interviews/           ---> In Built Speech-to-Text (transcripts)
   - Interview Room                  analyze/                      OpenAI (analysis)
   - Offer Management              /api/offers/               ---> OpenAI (offer generation)
   - Onboarding                      sign/                         Gmail (offer email)
@@ -223,15 +223,12 @@ SLACK_INVITE_LINK=https://join.slack.com/t/your-workspace/shared_invite/...
 
 > **Fallback:** Without Slack credentials, onboarding is simulated with console logging.
 
-### 5. Fireflies.ai API (Optional)
+### 5. Live Interview Transcripts
 
 **Used for:** Fetching meeting transcripts from recorded video calls.
 
-```env
-FIREFLIES_API_KEY=your-fireflies-api-key
-```
 
-> This is optional. The interview room uses browser-based speech recognition as the primary transcript source.
+> The interview room uses browser-based speech recognition as the primary transcript source.
 
 ### 6. Application Settings
 
