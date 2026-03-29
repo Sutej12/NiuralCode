@@ -30,7 +30,6 @@ An end-to-end AI-native hiring pipeline built with **Django REST Framework** (ba
 | Google Calendar API | Interview slot availability, tentative holds, confirmed bookings, Google Meet links |
 | Slack API | Onboarding automation (invites, welcome messages, HR notifications) |
 | Gmail SMTP | Transactional emails throughout the pipeline |
-| Fireflies.ai API | Meeting transcript fetching (optional) |
 
 ### Frontend
 | Technology | Purpose |
